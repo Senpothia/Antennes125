@@ -339,9 +339,9 @@ donnees3 <- data.frame(N,B3)
 
 p<-(
 ggplot(donnees1, color=c("L1", "L2", "L3"))
-  +geom_line(data=donnees1,aes(x=N,y=B1),color="blue")
-  +geom_line(data=donnees2,aes(x=N,y=B2),color="green")
-  +geom_line(data=donnees3,aes(x=N,y=B3),color="magenta")
+  +geom_line(data=donnees1,aes(x=N,y=B1,colour="L1"))
+  +geom_line(data=donnees2,aes(x=N,y=B2,colour="L2"))
+  +geom_line(data=donnees3,aes(x=N,y=B3,color="L3"))
   +  ggtitle("Champs/ tours - global")
   + labs(x = "N - Tours",
        y = "Champ",
@@ -366,12 +366,13 @@ donnees0 <- data.frame(N,I0)
 donnees1 <- data.frame(N,I1)
 donnees2 <- data.frame(N,I2)
 donnees3 <- data.frame(N,I3)
+donnees<-data.frame(N, I0, I1, I2, I3)
 
 p<-(
-  ggplot(donnees1, color=c("L1", "L2", "L3"))
-  +geom_line(data=donnees1,aes(x=N,y=I1),color="blue")
-  +geom_line(data=donnees2,aes(x=N,y=I2),color="green")
-  +geom_line(data=donnees3,aes(x=N,y=I3),color="magenta")
+  ggplot(donnees, color=c("I1", "I2", "I3"))
+  +geom_line(data=donnees,aes(x=N,y=I1, colour="I1"))
+  +geom_line(data=donnees,aes(x=N,y=I2,colour="I2"))
+  +geom_line(data=donnees,aes(x=N,y=I3, ,color="I3"))
   +  ggtitle("Courantps/ tours - global")
   + labs(x = "N - Tours",
          y = "Champ",
