@@ -580,9 +580,9 @@ jpeg("FreqC980pf.jpeg")
  p<-(ggplot(CORN68) + geom_point(aes(x = F, y = L), colour = "#4271AE")  + stat_function(fun = LN68Est, color = "red") +  ggtitle("Inductance vs Fréquence - N=68") 
      # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
  )
- #png("LN68.png")
+ png("LN68.png")
  print(p)
- #dev.off()
+ dev.off()
  
  print("-----  ajustement 10  N=73 ------------")
  
@@ -628,18 +628,36 @@ jpeg("FreqC980pf.jpeg")
  
  # Représentation conjointes de toutes les courbes de dépendance à la fréquence
  
- p<-(ggplot(CORN68) + geom_point(aes(x = F, y = L), colour = "#4271AE")  
-     + stat_function(fun = LN68Est, color = "red") 
-     + stat_function(fun = LN73Est, color = "blue") 
-     + stat_function(fun = LN90Est, color = "green") 
-     + stat_function(fun = LN120Est, color = "magenta")
-     + labs(x = "Fréquence",
-            y = "Inductance",
-            color="Tours"
-     ) 
+ 
+ F <- seq(10,100,by=1)
+ L68<-LN68Est(F)
+ L73<-LN73Est(F)
+ L90<-LN90Est(F)
+ L120<-LN120Est(F)
 
+ 
+ donnees68 <- data.frame(F,L68)
+ donnees73 <- data.frame(F,L73)
+ donnees90 <- data.frame(F,L90)
+ donnees120 <- data.frame(F,L120)
+ 
+ donnees<-data.frame(F, L68, L73, L90, L120)
+ 
+ 
+ p<-(
+   ggplot(donnees68, color=c("L68", "L73", "L90", "L120"))
+   +geom_line(data=donnees68,aes(x=F,y=L68, colour="N=68"))
+   +geom_line(data=donnees73,aes(x=F,y=L73, colour="N=73"))
+   +geom_line(data=donnees90,aes(x=F,y=L90, colour="N=90"))
+   +geom_line(data=donnees120,aes(x=F,y=L120, colour="N=120"))
+   +  ggtitle("Courantps/ tours - global")
+   + labs(x = "Fréquence(kHz)",
+          y = "Inductance (mH)",
+          color="Spires"
+   ) 
  )
- png("LN68.png")
+ 
+ png("dependanceF.png")
  print(p)
  dev.off()
  
