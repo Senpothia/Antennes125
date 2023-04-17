@@ -462,22 +462,30 @@ V3ant<-function(N){
   return(v)
 }
 
-
+jpeg("tensions.jpg")
  curve(V1ant, 40, 120, col="red", main="Tension antenne estimée - carte 1",  xlab="Tours",
-       ylab="Tension")
- 
- 
+       ylab="Tension (V)")
+
+
  curve(V2ant, 40, 120, col="blue", main="Tension antenne estimée - carte 2",  xlab="Tours",
-       ylab="Tension", add=TRUE)
+       ylab="Tension (V)", add=TRUE)
 
  
  curve(V3ant, 40, 120, col="magenta", main="Tension antenne estimée - carte 3",  xlab="Tours",
-       ylab="Tension", add=TRUE)
+       ylab="Tension (V)", add=TRUE)
+ legend(x = "bottomright",          # Position
+        legend = c("carte 1", "carte 2", "carte 3"),  # Legend texts
+        lty = c(1, 1, 1),           # Line types
+        col = c("red", "blue", "magenta"),           # Line colors
+        lwd = 2) 
+ dev.off()
  
  # -------------------------------------------------------------------------------------------------------------------------- 
  
  # Estimation de la capacité d'accord
  
+ 
+ jpeg("capas.jpg")
  curve(Cres1, 40, 120, col="red", main="Capacité d'accord estimée - carte 1",  xlab="Tours",
        ylab="C (nF)")
  
@@ -488,6 +496,12 @@ V3ant<-function(N){
  
  curve(Cres3, 40, 120, col="magenta", main="Capacité d'accord estimée - carte 3",  xlab="Tours",
        ylab="C (nF)", add=TRUE)
+ legend(x = "topright",          # Position
+        legend = c("carte 1", "carte 2", "carte 3"),  # Legend texts
+        lty = c(1, 1, 1),           # Line types
+        col = c("red", "blue", "magenta"),           # Line colors
+        lwd = 2) 
+ dev.off()
  
  # Estimation fréquence d'accord
  
@@ -528,12 +542,12 @@ V3ant<-function(N){
  
  #-----------------------------------------------------------------------------------------------------------------------------
  # Courbe Frequence vs tours
- 
- curve(Fres1_C,40, 120, col="magenta", main="Fréquence d'accord estimée - carte 1 / C=980pF",  xlab="Tours",
+jpeg("FreqC980pf.jpeg")
+ curve(Fres1_C,40, 120, col="magenta", main="Fréquence d'accord estimée - carte 1 / C=980pF avant correction",  xlab="Tours",
        ylab="Fréquence (Hz)")
  abline(h = 125000, col="red")
  abline(v=n[1], col="red")
- 
+ dev.off()
  
  #-----------------------------------------------------------------------------------------------------------------------------
  # Facteur de correction
@@ -580,9 +594,9 @@ V3ant<-function(N){
  p<-(ggplot(CORN73) + geom_point(aes(x = F, y = L), colour = "#4271AE")  + stat_function(fun = LN73Est, color = "red") +  ggtitle("Inductance vs Fréquence - N=73") 
      # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
  )
- #png("LN73.png")
+ png("LN73.png")
  print(p)
- #dev.off()
+ dev.off()
  
  print("-----  ajustement 11  N=90 ------------")
  
@@ -594,9 +608,9 @@ V3ant<-function(N){
  p<-(ggplot(CORN90) + geom_point(aes(x = F, y = L), colour = "#4271AE")  + stat_function(fun = LN90Est, color = "red") +  ggtitle("Inductance vs Fréquence - N=90") 
      # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
  )
- #png("LN90.png")
+ png("LN90.png")
  print(p)
- #dev.off()
+ dev.off()
  
  print("-----  ajustement 12  N=120 ------------")
  
@@ -608,9 +622,9 @@ V3ant<-function(N){
  p<-(ggplot(CORN120) + geom_point(aes(x = F, y = L), colour = "#4271AE")  + stat_function(fun = LN120Est, color = "red") +  ggtitle("Inductance vs Fréquence - N=120") 
      # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
  )
- #png("LN120.png")
+ png("LN120.png")
  print(p)
- #dev.off()
+ dev.off()
  
  # Représentation conjointes de toutes les courbes de dépendance à la fréquence
  
@@ -625,9 +639,9 @@ V3ant<-function(N){
      ) 
 
  )
- #png("LN68.png")
+ png("LN68.png")
  print(p)
- #dev.off()
+ dev.off()
  
  #--------------------------------------------------------------------------------------------------------
  
