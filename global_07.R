@@ -371,8 +371,8 @@ donnees<-data.frame(N, I0, I1, I2, I3)
 p<-(
   ggplot(donnees, color=c("I1", "I2", "I3"))
   +geom_line(data=donnees,aes(x=N,y=I1, colour="I1"))
-  +geom_line(data=donnees,aes(x=N,y=I2,colour="I2"))
-  +geom_line(data=donnees,aes(x=N,y=I3, ,color="I3"))
+  +geom_line(data=donnees,aes(x=N,y=I2, colour="I2"))
+  +geom_line(data=donnees,aes(x=N,y=I3, colour="I3"))
   +  ggtitle("Courantps/ tours - global")
   + labs(x = "N - Tours",
          y = "Champ",
