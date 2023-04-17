@@ -339,9 +339,9 @@ donnees3 <- data.frame(N,B3)
 
 p<-(
 ggplot(donnees1, color=c("L1", "L2", "L3"))
-  +geom_line(data=donnees1,aes(x=N,y=B1,colour="L1"))
-  +geom_line(data=donnees2,aes(x=N,y=B2,colour="L2"))
-  +geom_line(data=donnees3,aes(x=N,y=B3,color="L3"))
+  +geom_line(data=donnees1,aes(x=N,y=B1,colour="carte 1"))
+  +geom_line(data=donnees2,aes(x=N,y=B2,colour="carte 2"))
+  +geom_line(data=donnees3,aes(x=N,y=B3,color="carte 3"))
   +  ggtitle("Champs/ tours - global")
   + labs(x = "N - Tours",
        y = "Champ",
@@ -370,9 +370,9 @@ donnees<-data.frame(N, I0, I1, I2, I3)
 
 p<-(
   ggplot(donnees, color=c("I1", "I2", "I3"))
-  +geom_line(data=donnees,aes(x=N,y=I1, colour="I1"))
-  +geom_line(data=donnees,aes(x=N,y=I2, colour="I2"))
-  +geom_line(data=donnees,aes(x=N,y=I3, colour="I3"))
+  +geom_line(data=donnees,aes(x=N,y=I1, colour="carte 1"))
+  +geom_line(data=donnees,aes(x=N,y=I2, colour="carte 2"))
+  +geom_line(data=donnees,aes(x=N,y=I3, colour="carte 3"))
   +  ggtitle("Courantps/ tours - global")
   + labs(x = "N - Tours",
          y = "Champ",
