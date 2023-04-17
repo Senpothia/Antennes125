@@ -373,7 +373,7 @@ p<-(
   +geom_line(data=donnees,aes(x=N,y=I1, colour="carte 1"))
   +geom_line(data=donnees,aes(x=N,y=I2, colour="carte 2"))
   +geom_line(data=donnees,aes(x=N,y=I3, colour="carte 3"))
-  +  ggtitle("Courantps/ tours - global")
+  +  ggtitle("Courants/ tours - global")
   + labs(x = "N - Tours",
          y = "Champ",
          color="Cartes"
