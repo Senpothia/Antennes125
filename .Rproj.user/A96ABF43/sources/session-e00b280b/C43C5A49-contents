@@ -675,22 +675,30 @@ jpeg("FreqC980pf.jpeg")
  lm1 <- lm(coef~N, data=coefs1)
  print("Paramètres de correction")
  print(lm1$coefficients)
- plot(x=coefs1$N, y=coefs1$coef)
+ 
+ jpeg("degre0.jpg")
+ plot(x=coefs1$N, main = "Estimation coefficient regression inductance vs Fréquence", sub = "Dégré 0", y=coefs1$coef, xlab = "N", ylab = "Intercept")
  abline(lm1, col="blue")
+ dev.off()
  
  
  lm2 <- lm(coef~N, data=coefs2)
  print("Paramètres de correction")
  print(lm2$coefficients)
- plot(x=coefs2$N, y=coefs2$coef)
+ 
+ jpeg("degre1.jpg")
+ plot(x=coefs2$N,main = "Estimation coefficient regression inductance vs Fréquence", sub = "Dégré 1", y=coefs2$coef, xlab = "N", ylab = "facteur degré 1")
  abline(lm2, col="red")
+ dev.off()
  
  
  lm3 <- lm(coef~N, data=coefs3)
  print("Paramètres de correction")
  print(lm3$coefficients)
- plot(x=coefs3$N, y=coefs3$coef)
+ jpeg("degre2.jpg")
+ plot(x=coefs3$N, y=coefs3$coef, main = "Estimation coefficient regression inductance vs Fréquence", sub = "Dégré 2", xlab = "N", ylab = "facteur degré 2")
  abline(lm3, col="magenta")
+ dev.off()
  
  inter<-function(N){
    
