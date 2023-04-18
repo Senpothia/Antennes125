@@ -110,11 +110,19 @@ dev.off()
  Rser=27
  Rad=9
 
- Iant<-function(R){
+ Iant<-function(R){  # En milliampères
 
    I<-(4/pi)*((vdd-Vss)/(R+Rser+2*Rad))*1000
    return(I)
 
+ }
+ 
+ 
+ IantA<-function(R){  # En Ampères
+   
+   I<-(4/pi)*((vdd-Vss)/(R+Rser+2*Rad))
+   return(I)
+   
  }
 
 jpeg("Ith.jpg")
@@ -438,6 +446,8 @@ print(maxChp3)
 
 # Estimation tension d'antenne 
 
+c2<-(39e-12*1.5e-9)/(39e-12+1.5e-9)  # Influence pont capacitif
+
 Cres<-function(N, L){
   
   L<-eval(L)
@@ -464,6 +474,11 @@ Cres3<-function(N){
   L<-L3Est(N)*1e-03
   c<-((2*pi*F0)^2*L)^-1
   
+}
+
+Cresonnance<-function(L){  # Fréquence de résonnance à 125kHz pour L en Henry 
+  
+  return(1/((2*pi*125000)^2*L*1e-03) - c2)
 }
 
 Vant<-function(N, R, L){
@@ -1173,7 +1188,7 @@ jpeg("FreqC980pf.jpeg")
  print("Valeur de capacité entrée: ")
  print(cap2)
  
- c2<-(39e-12*1.5e-9)/(39e-12+1.5e-9)
+# c2<-(39e-12*1.5e-9)/(39e-12+1.5e-9)  # Influence pont capacitif
  
  Cacc<-(cap2)+c2
  
@@ -1191,19 +1206,33 @@ jpeg("FreqC980pf.jpeg")
  print(Lattendue(Cacc))
  
  # Optimisation nbre de spires
+ print("-------   Ajustement lm4 - inductance vs N pour 125kHz -----------")
+ 
  tours<-seq(60,120, by=1)
  lm4 <- lm(Ind125k~tours, data=data.frame(tours, Ind125k))
  
- print("-------   Ajustement lm4 - inductance vs N pour 125kHz -----------")
+ L125k<-function(N){
+   
+   return(lm4$coefficients[1] + lm4$coefficients[2]*N)
+ }
+ 
  print(lm4)
  
- 
+ print("-------   Ajustement lm5 - Résistance vs N pour 125kHz -----------")
  
  lm5 <- lm(R125k~tours, data=data.frame(tours, R125k))
- 
- print("-------   Ajustement lm5 - Résistance vs N pour 125kHz -----------")
  print(lm5)
  
+ R125k<-function(N){
+   
+   return(lm5$coefficients[1] + lm5$coefficients[2]*N)
+ }
+ 
+ NforR125<-function(N){
+   
+   return(abs(R125k(N) - Rattendue))
+   
+ }
  
  
  spires<-function(N){  # Recherche de la valeur de N pour L donnée
@@ -1230,12 +1259,43 @@ jpeg("FreqC980pf.jpeg")
  print_color("------------------------------------------------\n", "red")
  
  
+# Estimation en fonction du courant d'antenne
+ 
+ 
+ Iantenne <- readline(prompt="Entrée la valeur du courant d'antenne en mA: ")
+ # convert character into integer 
+ Iantenne2 <- as.integer(Iantenne)*1e-3
+ message<-cat("Valeur du courant d'antenne choisi: ", Iantenne, "mA", "\n")
+ 
+ print_color(message, "red")
+ 
+ RforI<-function(R){  # Fonction d'optimisation (R pour Iant donné)
+   
+   return(abs(IantA(R) - Iantenne2))
+   
+ }
+ 
+   
 
-  
-  
+ r<-optimize(RforI, c(0, 10000))
+ message<-cat("Résistance estimée: ", as.character(r[1]), "\n")
+ print_color(message, "red")
+ print_color("------------------------------------------------\n", "red")
  
+ Rattendue<-as.numeric(r[1])
  
- 
+ n<-optimize(NforR125, c(40, 120))
 
+ print_color( paste("Nombre de spires estimés: ", as.character(n[1])), "red")
+ print_color("\n","red")
+ print_color("------------------------------------------------\n", "red")
+ Lcal<-L125k(as.numeric(n[1]))
+ print_color( paste("Inductance antenne: ", L125k(as.numeric(n[1]))), "red")
+ print_color("\n","red")
+ print_color( paste("Capacité d'accord: ", Cresonnance(Lcal)), "red")
+ print_color("\n","red")
+ print_color("-----------------  FIN DE RAPPORT  ------------\n", "red")
+ 
+ 
  
  
