@@ -81,7 +81,7 @@ png("L3.png")
 print(p)
 dev.off()
 
-# Représentation globale
+# Représentation globale des inductances
 
 p<- (ggplot(TAB, color=c("Ln", "L1", "L2", "L3")) 
       + geom_point(aes(x = N, y = Ln , colour = "neutre"))  + stat_function(fun = LnEst, color = "magenta")  
@@ -140,9 +140,12 @@ dev.off()
  print(summary(mod5))
 
  R0Est<-function(N){mod5$coefficients[1]  + mod5$coefficients[2] * N +   mod5$coefficients[3] * N^2}
- print(ggplot(TAB) + geom_point(aes(x = N, y = Rn), colour = "#4271AE")  + stat_function(fun = R0Est, color = "red") +  ggtitle("Résistance ant / tours - Neutre")
-
+ p<-(print(ggplot(TAB) + geom_point(aes(x = N, y = Rn), colour = "#4271AE")  + stat_function(fun = R0Est, color = "red") +  ggtitle("Résistance ant / tours - Neutre"))
  )
+ 
+ jpeg("R0.jpg")
+ print(p)
+ dev.off()
 
  I0n<-function(N){
 
@@ -168,10 +171,14 @@ dev.off()
 
  print(summary(mod6))
 
- R1Est<-function(N){mod6$coefficients[1]  + mod6$coefficients[2] * N +   mod6$coefficients[3] * N^2}
- print(ggplot(TAB) + geom_point(aes(x = N, y = R1), colour = "#4271AE")  + stat_function(fun = R1Est, color = "red") +  ggtitle("Résistance ant / tours - Carte 1")
+R1Est<-function(N){mod6$coefficients[1]  + mod6$coefficients[2] * N +   mod6$coefficients[3] * N^2}
+p<-( print(ggplot(TAB) + geom_point(aes(x = N, y = R1), colour = "#4271AE")  + stat_function(fun = R1Est, color = "red") +  ggtitle("Résistance ant / tours - Carte 1"))
+)
 
- )
+jpeg("R1.jpg")
+print(p)
+dev.off()
+
 
  I1n<-function(N){
 
@@ -199,9 +206,12 @@ dev.off()
  print(summary(mod7))
 
  R2Est<-function(N){mod7$coefficients[1]  + mod7$coefficients[2] * N +   mod7$coefficients[3] * N^2}
- print(ggplot(TAB) + geom_point(aes(x = N, y = R2), colour = "#4271AE")  + stat_function(fun = R2Est, color = "red") +  ggtitle("Résistance ant / tours - carte 2")
-
+ p<-(print(ggplot(TAB) + geom_point(aes(x = N, y = R2), colour = "#4271AE")  + stat_function(fun = R2Est, color = "red") +  ggtitle("Résistance ant / tours - carte 2"))
  )
+ 
+ jpeg("R2.jpg")
+ print(p)
+ dev.off()
 
  I2n<-function(N){
 
@@ -228,9 +238,12 @@ dev.off()
  print(summary(mod8))
  
  R3Est<-function(N){mod8$coefficients[1]  + mod8$coefficients[2] * N +   mod8$coefficients[3] * N^2}
- print(ggplot(TAB) + geom_point(aes(x = N, y = R3), colour = "#4271AE")  + stat_function(fun = R3Est, color = "red") +  ggtitle("Résistance ant / tours - carte 3")
-       
+ p<-(print(ggplot(TAB) + geom_point(aes(x = N, y = R3), colour = "#4271AE")  + stat_function(fun = R3Est, color = "red") +  ggtitle("Résistance ant / tours - carte 3"))
  )
+ 
+ jpeg("R3.jpg")
+ print(p)
+ dev.off()
  
  I3n<-function(N){
    
@@ -244,6 +257,26 @@ dev.off()
    
    curve(I3n, 0, 120, col="red", main="Courant estimé antenne Vs tours - carte 3",  xlab="Tours",
          ylab="Iant(mA)")
+dev.off()
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+# Représentation globale des résistances
+
+p<- (ggplot(TAB, color=c("neutre", "carte 1", "carte 2", "carte 3")) 
+     + geom_point(aes(x = N, y = Rn , colour = "neutre"))  + stat_function(fun = R0Est, color = "magenta")  
+     + geom_point(aes(x = N, y = R1 , colour = "carte1"))  + stat_function(fun = R1Est, color = "red")
+     + geom_point(aes(x = N, y = R2 , colour = "carte2"))  + stat_function(fun = R2Est, color = "green")
+     + geom_point(aes(x = N, y = R3 , colour = "carte3"))  + stat_function(fun = R3Est, color = "blue")
+     +  ggtitle("Résistance / tours - global")
+     + labs(x = "N - Tours",
+            y = "Résistance (Ohms)",
+            color="Cartes"
+     ) 
+)
+
+png("globalR.png")
+print(p)
 dev.off()
 
 
@@ -677,7 +710,7 @@ jpeg("FreqC980pf.jpeg")
  print(lm1$coefficients)
  
  jpeg("degre0.jpg")
- plot(x=coefs1$N, main = "Estimation coefficient regression inductance vs Fréquence", sub = "Dégré 0", y=coefs1$coef, xlab = "N", ylab = "Intercept")
+ plot(x=coefs1$N, main = "Estimation coefficient regression inductance vs Fréquence", sub = "Degré 0", y=coefs1$coef, xlab = "N", ylab = "Intercept")
  abline(lm1, col="blue")
  dev.off()
  
@@ -687,7 +720,7 @@ jpeg("FreqC980pf.jpeg")
  print(lm2$coefficients)
  
  jpeg("degre1.jpg")
- plot(x=coefs2$N,main = "Estimation coefficient regression inductance vs Fréquence", sub = "Dégré 1", y=coefs2$coef, xlab = "N", ylab = "facteur degré 1")
+ plot(x=coefs2$N,main = "Estimation coefficient regression inductance vs Fréquence", sub = "Degré 1", y=coefs2$coef, xlab = "N", ylab = "facteur degré 1")
  abline(lm2, col="red")
  dev.off()
  
@@ -696,7 +729,7 @@ jpeg("FreqC980pf.jpeg")
  print("Paramètres de correction")
  print(lm3$coefficients)
  jpeg("degre2.jpg")
- plot(x=coefs3$N, y=coefs3$coef, main = "Estimation coefficient regression inductance vs Fréquence", sub = "Dégré 2", xlab = "N", ylab = "facteur degré 2")
+ plot(x=coefs3$N, y=coefs3$coef, main = "Estimation coefficient regression inductance vs Fréquence", sub = "Degré 2", xlab = "N", ylab = "facteur degré 2")
  abline(lm3, col="magenta")
  dev.off()
  
@@ -837,8 +870,10 @@ jpeg("FreqC980pf.jpeg")
  tours<-seq(60, 120, by=1)
  F<-rep(125,61 )
  Ind125k<-Estimateur2(tours, F)
- plot(tours, Ind125k, type="l", col="blue")
  
+ jpeg("Ind125kN.jpg")
+ plot(tours, Ind125k, type="l", main = "Inductance vs N - F=125kHz", xlab = "N", ylab = "Inductance (mH)", col="blue")
+ dev.off()
  
  
  
@@ -892,7 +927,7 @@ jpeg("FreqC980pf.jpeg")
  print_color("-------   RESULTAT D'OPTIMISATION    -----------\n", "red")
  print_color("\n","red")
  print_color(paste("Optimisation pour F=125kHz et C=", cap), "red")
- print_color("\n","red")
+ print_color("pF\n","red")
  print_color( paste("Jeu de données utilisé: ", dataSource), "red")
  print_color("\n","red")
  print_color("\n","red")
