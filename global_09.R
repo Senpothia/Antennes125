@@ -1062,10 +1062,7 @@ jpeg("FreqC980pf.jpeg")
    
  }
  
- 
- 
- #--------------------------------------------------------------------------------------------------------
- 
+
  
  #--------------------------------------------------------------------------------------------------------
  # Test des modèles de correction pour la résistance
@@ -1152,46 +1149,18 @@ jpeg("FreqC980pf.jpeg")
  dev.off()
  
  #--------------------------------------------------------------------------------------------------------
+
+ 
+ # Estimation de la courbe de résistance en fonction de la fréquence à 125kHz
  
  
+ tours<-seq(60, 120, by=1)
+ F<-rep(125,61 )
+ R125k<-EstimR2(tours, F)
  
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+ jpeg("R125kN.jpg")
+ plot(tours, R125k, type="l", main = "Résistance vs N - F=125kHz", xlab = "N", ylab = "Résistance (Ohms)", col="blue")
+ dev.off()
  
  
  
@@ -1225,10 +1194,19 @@ jpeg("FreqC980pf.jpeg")
  tours<-seq(60,120, by=1)
  lm4 <- lm(Ind125k~tours, data=data.frame(tours, Ind125k))
  
- print("-------   Ajustement lm4   -----------")
+ print("-------   Ajustement lm4 - inductance vs N pour 125kHz -----------")
  print(lm4)
  
- spires<-function(N){
+ 
+ 
+ lm5 <- lm(R125k~tours, data=data.frame(tours, R125k))
+ 
+ print("-------   Ajustement lm5 - Résistance vs N pour 125kHz -----------")
+ print(lm5)
+ 
+ 
+ 
+ spires<-function(N){  # Recherche de la valeur de N pour L donnée
    
    return(abs(lm4$coefficients[1] + N*lm4$coefficients[2]- Lattendue(Cacc)))
    
