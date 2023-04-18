@@ -1287,6 +1287,13 @@ if(cap == "0"){
   
   
   Iantenne <- readline(prompt="Entrée la valeur du courant d'antenne en mA: ")
+  
+  if(Iantenne == "0"){ 
+    
+    break
+    
+  }
+  
   # convert character into integer 
   Iantenne2 <- as.integer(Iantenne)*1e-3
   message<-cat("Valeur du courant d'antenne choisi: ", Iantenne, "mA", "\n")
