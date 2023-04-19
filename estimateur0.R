@@ -1236,7 +1236,7 @@ jpeg("./plots/FreqC980pf.jpeg")
  
  repeat{
    
-cap <- readline(prompt="Entrée la valeur de la capacité d'accord en pF: ")
+cap <- readline(prompt="Entrez la valeur de la capacité d'accord en pF: ")
    
 if(cap == "0"){ 
     
@@ -1286,7 +1286,7 @@ if(cap == "0"){
   # Estimation en fonction du courant d'antenne
   
   
-  Iantenne <- readline(prompt="Entrée la valeur du courant d'antenne en mA: ")
+  Iantenne <- readline(prompt="Entrez la valeur du courant d'antenne en mA: ")
   
   if(Iantenne == "0"){ 
     
@@ -1296,7 +1296,7 @@ if(cap == "0"){
   
   # convert character into integer 
   Iantenne2 <- as.integer(Iantenne)*1e-3
-  message<-cat("Valeur du courant d'antenne choisi: ", Iantenne, "mA", "\n")
+  message<-cat("Valeur du courant d'antenne choisie: ", Iantenne, "mA", "\n")
   
   print_color(message, "red")
   
