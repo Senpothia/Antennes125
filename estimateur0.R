@@ -5,7 +5,7 @@ library(insight)
 
 F0<-100000   # fréquence de référence
 
-dataSource<-"mesures.csv"
+dataSource<-"./data/mesures.csv"
 
 TAB<-read.table(dataSource,header=TRUE,sep=";",dec=",")
 
@@ -27,7 +27,7 @@ LnEst<-function(N){mod1$coefficients[1]  + mod1$coefficients[2] * N +   mod1$coe
 p<-(ggplot(TAB) + geom_point(aes(x = N, y = Ln), colour = "#4271AE")  + stat_function(fun = LnEst, color = "red") +  ggtitle("Inductance / tours - neutre") 
       #+  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
       )
-png("L0.png")
+png("./plots/L0.png")
 print(p)
 dev.off()
 
@@ -43,7 +43,7 @@ L1Est<-function(N){mod2$coefficients[1]  + mod2$coefficients[2] * N +   mod2$coe
 p<-(ggplot(TAB) + geom_point(aes(x = N, y = L1), colour = "#4271AE")  + stat_function(fun = L1Est, color = "red") +  ggtitle("Inductance / tours - carte 1") 
      # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
 )
-png("L1.png")
+png("./plots/L1.png")
 print(p)
 dev.off()
 
@@ -60,7 +60,7 @@ L2Est<-function(N){mod3$coefficients[1]  + mod3$coefficients[2] * N +   mod3$coe
 p<-(ggplot(TAB) + geom_point(aes(x = N, y = L2), colour = "#4271AE")  + stat_function(fun = L2Est, color = "red") +  ggtitle("Inductance / tours - carte 2") 
      # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
 )
-png("L2.png")
+png("./plots/L2.png")
 print(p)
 dev.off()
 
@@ -77,7 +77,7 @@ L3Est<-function(N){mod4$coefficients[1]  + mod4$coefficients[2] * N +   mod4$coe
 p<-(ggplot(TAB) + geom_point(aes(x = N, y = L3), colour = "#4271AE")  + stat_function(fun = L3Est, color = "red") +  ggtitle("Inductance / tours - carte 3") 
     #  +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
 )
-png("L3.png")
+png("./plots/L3.png")
 print(p)
 dev.off()
 
@@ -95,7 +95,7 @@ p<- (ggplot(TAB, color=c("Ln", "L1", "L2", "L3"))
            ) 
      )
      
-png("global.png")
+png("./plots/global.png")
 print(p)
 dev.off()
 
@@ -125,7 +125,7 @@ dev.off()
    
  }
 
-jpeg("Ith.jpg")
+jpeg("./plots/Ith.jpg")
 
    curve(Iant, 0, 500, col="red", main="Courant théorique antenne Vs Résistance antenne",  xlab="Résistance(Ohms)",
          ylab="Iant(mA)")
@@ -151,7 +151,7 @@ dev.off()
  p<-(print(ggplot(TAB) + geom_point(aes(x = N, y = Rn), colour = "#4271AE")  + stat_function(fun = R0Est, color = "red") +  ggtitle("Résistance ant / tours - Neutre"))
  )
  
- jpeg("R0.jpg")
+ jpeg("./plots/R0.jpg")
  print(p)
  dev.off()
 
@@ -163,7 +163,7 @@ dev.off()
  }
 
 
-jpeg("I0.jpg")
+jpeg("./plots/I0.jpg")
 
    curve(I0n, 0, 120, col="red", main="Courant estimé antenne Vs tours - Neutre",  xlab="Tours",
          ylab="Iant(mA)")
@@ -183,7 +183,7 @@ R1Est<-function(N){mod6$coefficients[1]  + mod6$coefficients[2] * N +   mod6$coe
 p<-( print(ggplot(TAB) + geom_point(aes(x = N, y = R1), colour = "#4271AE")  + stat_function(fun = R1Est, color = "red") +  ggtitle("Résistance ant / tours - Carte 1"))
 )
 
-jpeg("R1.jpg")
+jpeg("./plots/R1.jpg")
 print(p)
 dev.off()
 
@@ -196,7 +196,7 @@ dev.off()
  }
 
 
- jpeg("I1.jpg")
+ jpeg("./plots/I1.jpg")
 
    curve(I1n, 0, 120, col="red", main="Courant estimé antenne Vs tours - Carte 1",  xlab="Tours",
          ylab="Iant(mA)") 
@@ -217,7 +217,7 @@ dev.off()
  p<-(print(ggplot(TAB) + geom_point(aes(x = N, y = R2), colour = "#4271AE")  + stat_function(fun = R2Est, color = "red") +  ggtitle("Résistance ant / tours - carte 2"))
  )
  
- jpeg("R2.jpg")
+ jpeg("./plots/R2.jpg")
  print(p)
  dev.off()
 
@@ -229,7 +229,7 @@ dev.off()
  }
 
 
- jpeg("I2.jpg")
+ jpeg("./plots/I2.jpg")
 
    curve(I2n, 0, 120, col="red", main="Courant estimé antenne Vs tours - carte 2",  xlab="Tours",
          ylab="Iant(mA)")
@@ -249,7 +249,7 @@ dev.off()
  p<-(print(ggplot(TAB) + geom_point(aes(x = N, y = R3), colour = "#4271AE")  + stat_function(fun = R3Est, color = "red") +  ggtitle("Résistance ant / tours - carte 3"))
  )
  
- jpeg("R3.jpg")
+ jpeg("./plots/R3.jpg")
  print(p)
  dev.off()
  
@@ -261,7 +261,7 @@ dev.off()
  }
  
  
- jpeg("I3.jpg")
+ jpeg("./plots/I3.jpg")
    
    curve(I3n, 0, 120, col="red", main="Courant estimé antenne Vs tours - carte 3",  xlab="Tours",
          ylab="Iant(mA)")
@@ -283,7 +283,7 @@ p<- (ggplot(TAB, color=c("neutre", "carte 1", "carte 2", "carte 3"))
      ) 
 )
 
-png("globalR.png")
+png("./plots/globalR.png")
 print(p)
 dev.off()
 
@@ -333,14 +333,14 @@ dev.off()
  
  # Représentation du champ par carte 
 
-jpeg("champ0.jpg")
+jpeg("./plots/champ0.jpg")
    curve(B0est, 0, 120, col="red", main="Champ estimé Vs tours - neutre",  xlab="Tours",
          ylab="Champ")
  
 dev.off()
 
  
-jpeg("champ1.jpg")
+jpeg("./plots/champ1.jpg")
    
    curve(B1est, 0, 120, col="red", main="Champ estimé Vs tours - carte 1",  xlab="Tours",
          ylab="Champ")
@@ -348,7 +348,7 @@ jpeg("champ1.jpg")
 dev.off()
  
  
-jpeg("champ2.jpg")
+jpeg("./plots/champ2.jpg")
    
    curve(B2est, 0, 120, col="red", main="Champ estimé Vs tours - carte 2",  xlab="Tours",
          ylab="Champ")
@@ -356,7 +356,7 @@ jpeg("champ2.jpg")
 dev.off()
  
  
-jpeg("champ3.jpg")
+jpeg("./plots/champ3.jpg")
    
    curve(B3est, 0, 120, col="red", main="Champ estimé Vs tours - carte 3",  xlab="Tours",
          ylab="Champ")
@@ -389,7 +389,7 @@ ggplot(donnees1, color=c("L1", "L2", "L3"))
        color="Cartes"
 ) 
 )
-png("champs.png")
+png("./plots/champs.png")
 print(p)
 dev.off()
 
@@ -420,7 +420,7 @@ p<-(
          color="Cartes"
   ) 
 )
-png("courants.png")
+png("./plots/courants.png")
 print(p)
 dev.off()
 
@@ -510,7 +510,7 @@ V3ant<-function(N){
   return(v)
 }
 
-jpeg("tensions.jpg")
+jpeg("./plots/tensions.jpg")
  curve(V1ant, 40, 120, col="red", main="Tension antenne estimée - carte 1",  xlab="Tours",
        ylab="Tension (V)")
 
@@ -533,7 +533,7 @@ jpeg("tensions.jpg")
  # Estimation de la capacité d'accord
  
  
- jpeg("capas.jpg")
+ jpeg("./plots/capas.jpg")
  curve(Cres1, 40, 120, col="red", main="Capacité d'accord estimée - carte 1",  xlab="Tours",
        ylab="C (nF)")
  
@@ -590,7 +590,7 @@ jpeg("tensions.jpg")
  
  #-----------------------------------------------------------------------------------------------------------------------------
  # Courbe Frequence vs tours pour C fixée
-jpeg("FreqC980pf.jpeg")
+jpeg("./plots/FreqC980pf.jpeg")
  curve(Fres1_C,40, 120, col="magenta", main="Fréquence d'accord estimée - carte 1 / C=980pF avant correction",  xlab="Tours",
        ylab="Fréquence (Hz)")
  abline(h = 125000, col="red")
@@ -600,7 +600,7 @@ jpeg("FreqC980pf.jpeg")
  #-----------------------------------------------------------------------------------------------------------------------------
  # Facteur de correction
  
- COR<-read.table("correction2.csv",header=TRUE,sep=";",dec=",")
+ COR<-read.table("./data/correction2.csv",header=TRUE,sep=";",dec=",")
  
  COR10<-COR[COR$F == 10.0, ]
  COR20<-COR[COR$F == 20.0, ]
@@ -628,7 +628,7 @@ jpeg("FreqC980pf.jpeg")
  p<-(ggplot(CORN68) + geom_point(aes(x = F, y = L), colour = "#4271AE")  + stat_function(fun = LN68Est, color = "red") +  ggtitle("Inductance vs Fréquence - N=68") 
      # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
  )
- png("LN68.png")
+ png("./plots/LN68.png")
  print(p)
  dev.off()
  
@@ -642,7 +642,7 @@ jpeg("FreqC980pf.jpeg")
  p<-(ggplot(CORN73) + geom_point(aes(x = F, y = L), colour = "#4271AE")  + stat_function(fun = LN73Est, color = "red") +  ggtitle("Inductance vs Fréquence - N=73") 
      # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
  )
- png("LN73.png")
+ png("./plots/LN73.png")
  print(p)
  dev.off()
  
@@ -656,7 +656,7 @@ jpeg("FreqC980pf.jpeg")
  p<-(ggplot(CORN90) + geom_point(aes(x = F, y = L), colour = "#4271AE")  + stat_function(fun = LN90Est, color = "red") +  ggtitle("Inductance vs Fréquence - N=90") 
      # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
  )
- png("LN90.png")
+ png("./plots/LN90.png")
  print(p)
  dev.off()
  
@@ -670,7 +670,7 @@ jpeg("FreqC980pf.jpeg")
  p<-(ggplot(CORN120) + geom_point(aes(x = F, y = L), colour = "#4271AE")  + stat_function(fun = LN120Est, color = "red") +  ggtitle("Inductance vs Fréquence - N=120") 
      # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
  )
- png("LN120.png")
+ png("./plots/LN120.png")
  print(p)
  dev.off()
  
@@ -705,7 +705,7 @@ jpeg("FreqC980pf.jpeg")
    ) 
  )
  
- png("dependanceF.png")
+ png("./plots/dependanceF.png")
  print(p)
  dev.off()
  
@@ -725,7 +725,7 @@ jpeg("FreqC980pf.jpeg")
  print("Paramètres de correction")
  print(lm1$coefficients)
  
- jpeg("degre0.jpg")
+ jpeg("./plots/degre0.jpg")
  plot(x=coefs1$N, main = "Estimation coefficient regression inductance vs Fréquence", sub = "Degré 0", y=coefs1$coef, xlab = "N", ylab = "Intercept")
  abline(lm1, col="blue")
  dev.off()
@@ -735,7 +735,7 @@ jpeg("FreqC980pf.jpeg")
  print("Paramètres de correction")
  print(lm2$coefficients)
  
- jpeg("degre1.jpg")
+ jpeg("./plots/degre1.jpg")
  plot(x=coefs2$N,main = "Estimation coefficient regression inductance vs Fréquence", sub = "Degré 1", y=coefs2$coef, xlab = "N", ylab = "facteur degré 1")
  abline(lm2, col="red")
  dev.off()
@@ -744,7 +744,7 @@ jpeg("FreqC980pf.jpeg")
  lm3 <- lm(coef~N, data=coefs3)
  print("Paramètres de correction")
  print(lm3$coefficients)
- jpeg("degre2.jpg")
+ jpeg("./plots/degre2.jpg")
  plot(x=coefs3$N, y=coefs3$coef, main = "Estimation coefficient regression inductance vs Fréquence", sub = "Degré 2", xlab = "N", ylab = "facteur degré 2")
  abline(lm3, col="magenta")
  dev.off()
@@ -835,7 +835,7 @@ jpeg("FreqC980pf.jpeg")
    ) 
  )
  
- png("simulN80vsFreq.png")
+ png("./plots/simulN80vsFreq.png")
  print(p)
  dev.off()
  
@@ -854,7 +854,7 @@ jpeg("FreqC980pf.jpeg")
    ) 
  )
  
- png("simulN100vsFreq.png")
+ png("./plots/simulN100vsFreq.png")
  print(p)
  dev.off()
  
@@ -874,7 +874,7 @@ jpeg("FreqC980pf.jpeg")
    ) 
  )
  
- png("simulN70vsFreq.png")
+ png("./plots/simulN70vsFreq.png")
  print(p)
  dev.off()
  
@@ -887,7 +887,7 @@ jpeg("FreqC980pf.jpeg")
  F<-rep(125,61 )
  Ind125k<-Estimateur2(tours, F)
  
- jpeg("Ind125kN.jpg")
+ jpeg("./plots/Ind125kN.jpg")
  plot(tours, Ind125k, type="l", main = "Inductance vs N - F=125kHz", xlab = "N", ylab = "Inductance (mH)", col="blue")
  dev.off()
  
@@ -910,7 +910,7 @@ jpeg("FreqC980pf.jpeg")
  p<-(ggplot(CORN68) + geom_point(aes(x = F, y = R), colour = "#4271AE")  + stat_function(fun = RN68Est, color = "red") +  ggtitle("Résistance vs Fréquence - N=68") 
      # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
  )
- png("RN68.png")
+ png("./plots/RN68.png")
  print(p)
  dev.off()
  
@@ -924,7 +924,7 @@ jpeg("FreqC980pf.jpeg")
  p<-(ggplot(CORN73) + geom_point(aes(x = F, y = R), colour = "#4271AE")  + stat_function(fun = RN73Est, color = "red") +  ggtitle("Résistance vs Fréquence - N=73") 
      # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
  )
- png("RN73.png")
+ png("./plots/RN73.png")
  print(p)
  dev.off()
  
@@ -938,7 +938,7 @@ jpeg("FreqC980pf.jpeg")
  p<-(ggplot(CORN90) + geom_point(aes(x = F, y = R), colour = "#4271AE")  + stat_function(fun = RN90Est, color = "red") +  ggtitle("Résistance vs Fréquence - N=90") 
      # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
  )
- png("RN90.png")
+ png("./plots/RN90.png")
  print(p)
  dev.off()
  
@@ -952,7 +952,7 @@ jpeg("FreqC980pf.jpeg")
  p<-(ggplot(CORN120) + geom_point(aes(x = F, y = R), colour = "#4271AE")  + stat_function(fun = RN120Est, color = "red") +  ggtitle("Résistance vs Fréquence - N=120") 
      # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
  )
- png("RN120.png")
+ png("./plots/RN120.png")
  print(p)
  dev.off()
  
@@ -989,7 +989,7 @@ jpeg("FreqC980pf.jpeg")
    ) 
  )
  
- png("dependanceRvsF.png")
+ png("./plots/dependanceRvsF.png")
  print(p)
  dev.off()
  
@@ -1010,7 +1010,7 @@ jpeg("FreqC980pf.jpeg")
  print("Paramètres de correction")
  print(lm1$coefficients)
  
- jpeg("degre0R.jpg")
+ jpeg("./plots/degre0R.jpg")
  plot(x=coefs1$N, main = "Estimation coefficient regression résistance vs Fréquence", sub = "Degré 0", y=coefs1$coef, xlab = "N", ylab = "Intercept")
  abline(lm11, col="blue")
  dev.off()
@@ -1020,7 +1020,7 @@ jpeg("FreqC980pf.jpeg")
  print("Paramètres de correction")
  print(lm2$coefficients)
  
- jpeg("degre1R.jpg")
+ jpeg("./plots/degre1R.jpg")
  plot(x=coefs2$N,main = "Estimation coefficient regression résistance vs Fréquence", sub = "Degré 1", y=coefs2$coef, xlab = "N", ylab = "facteur degré 1")
  abline(lm21, col="red")
  dev.off()
@@ -1029,7 +1029,7 @@ jpeg("FreqC980pf.jpeg")
  lm31 <- lm(coef~N, data=coefs3)
  print("Paramètres de correction")
  print(lm3$coefficients)
- jpeg("degre2R.jpg")
+ jpeg("./plots/degre2R.jpg")
  plot(x=coefs3$N, y=coefs3$coef, main = "Estimation coefficient regression résistance vs Fréquence", sub = "Degré 2", xlab = "N", ylab = "facteur degré 2")
  abline(lm31, col="magenta")
  dev.off()
@@ -1120,7 +1120,7 @@ jpeg("FreqC980pf.jpeg")
    ) 
  )
  
- png("simulRN80vsFreq.png")
+ png("./plots/simulRN80vsFreq.png")
  print(p)
  dev.off()
  
@@ -1139,7 +1139,7 @@ jpeg("FreqC980pf.jpeg")
    ) 
  )
  
- png("simulRN100vsFreq.png")
+ png("./plots/simulRN100vsFreq.png")
  print(p)
  dev.off()
  
@@ -1159,7 +1159,7 @@ jpeg("FreqC980pf.jpeg")
    ) 
  )
  
- png("simulRN70vsFreq.png")
+ png("./plots/simulRN70vsFreq.png")
  print(p)
  dev.off()
  
@@ -1186,7 +1186,7 @@ jpeg("FreqC980pf.jpeg")
  F<-rep(125,61 )
  R125k<-EstimR2(tours, F)
  
- jpeg("R125kN.jpg")
+ jpeg("./plots/R125kN.jpg")
  plot(tours, R125k, type="l", main = "Résistance vs N - F=125kHz", xlab = "N", ylab = "Résistance (Ohms)", col="blue")
  dev.off()
  
