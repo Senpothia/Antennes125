@@ -148,8 +148,8 @@ dev.off()
  print(summary(mod5))
 
  R0Est<-function(N){mod5$coefficients[1]  + mod5$coefficients[2] * N +   mod5$coefficients[3] * N^2}
- p<-(print(ggplot(TAB) + geom_point(aes(x = N, y = Rn), colour = "#4271AE")  + stat_function(fun = R0Est, color = "red") +  ggtitle("Résistance ant / tours - Neutre"))
- )
+ p<-(ggplot(TAB) + geom_point(aes(x = N, y = Rn), colour = "#4271AE")  + stat_function(fun = R0Est, color = "red") +  ggtitle("Résistance ant / tours - Neutre"))
+ 
  
  jpeg("./plots/R0.jpg")
  print(p)
@@ -180,8 +180,8 @@ dev.off()
  print(summary(mod6))
 
 R1Est<-function(N){mod6$coefficients[1]  + mod6$coefficients[2] * N +   mod6$coefficients[3] * N^2}
-p<-( print(ggplot(TAB) + geom_point(aes(x = N, y = R1), colour = "#4271AE")  + stat_function(fun = R1Est, color = "red") +  ggtitle("Résistance ant / tours - Carte 1"))
-)
+p<-( ggplot(TAB) + geom_point(aes(x = N, y = R1), colour = "#4271AE")  + stat_function(fun = R1Est, color = "red") +  ggtitle("Résistance ant / tours - Carte 1"))
+
 
 jpeg("./plots/R1.jpg")
 print(p)
@@ -214,8 +214,8 @@ dev.off()
  print(summary(mod7))
 
  R2Est<-function(N){mod7$coefficients[1]  + mod7$coefficients[2] * N +   mod7$coefficients[3] * N^2}
- p<-(print(ggplot(TAB) + geom_point(aes(x = N, y = R2), colour = "#4271AE")  + stat_function(fun = R2Est, color = "red") +  ggtitle("Résistance ant / tours - carte 2"))
- )
+ p<-(ggplot(TAB) + geom_point(aes(x = N, y = R2), colour = "#4271AE")  + stat_function(fun = R2Est, color = "red") +  ggtitle("Résistance ant / tours - carte 2"))
+ 
  
  jpeg("./plots/R2.jpg")
  print(p)
@@ -246,8 +246,8 @@ dev.off()
  print(summary(mod8))
  
  R3Est<-function(N){mod8$coefficients[1]  + mod8$coefficients[2] * N +   mod8$coefficients[3] * N^2}
- p<-(print(ggplot(TAB) + geom_point(aes(x = N, y = R3), colour = "#4271AE")  + stat_function(fun = R3Est, color = "red") +  ggtitle("Résistance ant / tours - carte 3"))
- )
+ p<-(ggplot(TAB) + geom_point(aes(x = N, y = R3), colour = "#4271AE")  + stat_function(fun = R3Est, color = "red") +  ggtitle("Résistance ant / tours - carte 3"))
+ 
  
  jpeg("./plots/R3.jpg")
  print(p)
