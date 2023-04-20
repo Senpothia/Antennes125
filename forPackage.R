@@ -14,16 +14,30 @@ Rser=27
 Rad=9
 z<-1e-2 # distance de référence 1cm
 r<-0.38 # rayon de l'antenne
-
+Cdv1<-39e-12
+Cdv2<-1.5e-09
+#c2<-Cdv1*Cdv2/(Cdv1+Cdv2)     # Influence pont capacitif
 c2<-(39e-12*1.5e-9)/(39e-12+1.5e-9)  # Influence pont capacitif
 
-#----------------------------------------------------------------------------------------------------------
+#----------------------  FONCTIONS   --------------------------------------------------------------------------------
 
 # Change reference frequency
 
-refFrequeny<-function(freq){
+setFrequency<-function(freq){
   
   F0<-freq
+}
+
+setCdv1<-function(c){
+  
+  Cdv1<-c
+
+}
+
+setCdv2<-function(c){
+  
+  Cdv2<-c
+  
 }
 
 # Load data file
@@ -46,9 +60,9 @@ saveGraphPng<-function(fileName, p){
   dev.off()
 }
 
-Iant<-function(R){  # En milliampères
+Iant<-function(x){  # En milliampères
   
-  I<-(4/pi)*((vdd-Vss)/(R+Rser+2*Rad))*1000
+  I<-(4/pi)*((vdd-Vss)/(x+Rser+2*Rad))*1000
   return(I)
   
 }
@@ -319,6 +333,21 @@ Lattendue<- function(C) {
 } 
 
 
+plotFunction<-function(func, xm, xM, titre, xlab, ylab){
+  
+  fonction<-parse(text=func)
+  fonction<-eval(fonction)
+  x <- seq(xm, xM, by=1)
+  val <- data.frame(x = x, y = fonction(x))
+  p<-(
+    ggplot(data = val, aes(x = x, y = y))+#, color="red")) + 
+      geom_line(color="red") + 
+      scale_x_continuous(name = xlab) +
+      scale_y_continuous(name = ylab) +
+      ggtitle(titre)
+  )
+  
+}
 
 
 
@@ -329,9 +358,7 @@ Lattendue<- function(C) {
 
 
 
-
-
-#-------------------------------------------------------------------------------------------------------------------------------------
+#----------------------     FIN  FONCTIONS      ---------------------------------------------------------------------------
 
 # ESTIMATION DES INDUCTANCES vs TOURS
 
@@ -348,13 +375,10 @@ print(summary(mod1))
 LnEst<-function(N){mod1$coefficients[1]  + mod1$coefficients[2] * N +   mod1$coefficients[3] * N^2}
 
 p<-(ggplot(TAB) + geom_point(aes(x = N, y = Ln), colour = "#4271AE")  + stat_function(fun = LnEst, color = "red") +  ggtitle("Inductance / tours - neutre") 
-    #+  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
+  
 )
 
 
-# png("./plots/L0.png")
-# print(p)
-# dev.off()
 
 saveGraphPng("L0", p)
 
@@ -368,12 +392,9 @@ print(summary(mod2))
 
 L1Est<-function(N){mod2$coefficients[1]  + mod2$coefficients[2] * N +   mod2$coefficients[3] * N^2}
 p<-(ggplot(TAB) + geom_point(aes(x = N, y = L1), colour = "#4271AE")  + stat_function(fun = L1Est, color = "red") +  ggtitle("Inductance / tours - carte 1") 
-    # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
+   
 )
 
-# png("./plots/L1.png")
-# print(p)
-# dev.off()
 
 saveGraphPng("L1", p)
 
@@ -387,13 +408,11 @@ print(summary(mod3))
 
 L2Est<-function(N){mod3$coefficients[1]  + mod3$coefficients[2] * N +   mod3$coefficients[3] * N^2}
 p<-(ggplot(TAB) + geom_point(aes(x = N, y = L2), colour = "#4271AE")  + stat_function(fun = L2Est, color = "red") +  ggtitle("Inductance / tours - carte 2") 
-    # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
+    
 )
 
 saveGraphPng("L2", p)
-# png("./plots/L2.png")
-# print(p)
-# dev.off()
+
 
 # Ajustement 4 - carte 3
 
@@ -409,9 +428,7 @@ p<-(ggplot(TAB) + geom_point(aes(x = N, y = L3), colour = "#4271AE")  + stat_fun
     #  +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
 )
 
-# png("./plots/L3.png")
-# print(p)
-# dev.off()
+
 
 saveGraphPng("L3", p)
 
@@ -429,9 +446,7 @@ p<- (ggplot(TAB, color=c("Ln", "L1", "L2", "L3"))
      ) 
 )
 
-# png("./plots/global.png")
-# print(p)
-# dev.off()
+
 
 saveGraphPng("global", p)
 
@@ -445,13 +460,26 @@ saveGraphPng("global", p)
 
 #p<(curve(Iant, 0, 500, col="red", main="Courant théorique antenne Vs Résistance antenne",  xlab="Résistance(Ohms)", ylab="Iant(mA)"))
 
-jpeg("./plots/Ith.jpg")
+ # jpeg("./plots/Ith.jpg")
+ # 
+ # curve(Iant, 0, 500, col="red", main="Courant théorique antenne Vs Résistance antenne",  xlab="Résistance(Ohms)",
+ #       ylab="Iant(mA)")
+ # dev.off()
 
-curve(Iant, 0, 500, col="red", main="Courant théorique antenne Vs Résistance antenne",  xlab="Résistance(Ohms)",
-      ylab="Iant(mA)")
-dev.off()
 
-#saveGraphPng("Ith.png")
+# x <- seq(0, 500, by=1)
+# val <- data.frame(x = x, y = Iant(x))
+# p<-(
+#   ggplot(data = val, aes(x = x, y = y))+#, color="red")) +
+#     geom_line(color="red") +
+#     scale_x_continuous(name = "Résistance(Ohms)")+
+#     scale_y_continuous(name = "Iant(mA)")+
+#     ggtitle("Courant théorique antenne Vs Résistance antenne")
+# )
+
+p<-plotFunction("Iant", 0, 500, "Courant théorique antenne Vs Résistance antenne", "Résistance(Ohms)", "Iant(mA)")
+print(p)
+saveGraphPng("Ith", p)
 
 #---------------------------------------------------------------------------------------------------------------------------------------
 
@@ -473,18 +501,16 @@ R0Est<-function(N){mod5$coefficients[1]  + mod5$coefficients[2] * N +   mod5$coe
 p<-(ggplot(TAB) + geom_point(aes(x = N, y = Rn), colour = "#4271AE")  + stat_function(fun = R0Est, color = "red") +  ggtitle("Résistance ant / tours - Neutre"))
 
 saveGraphPng("R0", p)
-# jpeg("./plots/R0.jpg")
-# print(p)
+
+
+# jpeg("./plots/I0.jpg")
+# curve(I0n, 0, 120, col="red", main="Courant estimé antenne Vs tours - Neutre",  xlab="Tours",
+#       ylab="Iant(mA)")
 # dev.off()
 
-
-
-
-jpeg("./plots/I0.jpg")
-
-curve(I0n, 0, 120, col="red", main="Courant estimé antenne Vs tours - Neutre",  xlab="Tours",
-      ylab="Iant(mA)")
-dev.off()
+p<-plotFunction("I0n", 0, 120, "Courant estimé antenne Vs tours - Neutre", "Tours", "Iant(mA)")
+print(p)
+saveGraphPng("I0", p)
 
 # Ajustement 6 - Carte 1
 
@@ -500,20 +526,19 @@ R1Est<-function(N){mod6$coefficients[1]  + mod6$coefficients[2] * N +   mod6$coe
 p<-( ggplot(TAB) + geom_point(aes(x = N, y = R1), colour = "#4271AE")  + stat_function(fun = R1Est, color = "red") +  ggtitle("Résistance ant / tours - Carte 1"))
 
 
-# jpeg("./plots/R1.jpg")
-# print(p)
-# dev.off()
-
 saveGraphPng("R1", p)
 
 
 
 
-jpeg("./plots/I1.jpg")
+# jpeg("./plots/I1.jpg")
+# curve(I1n, 0, 120, col="red", main="Courant estimé antenne Vs tours - Carte 1",  xlab="Tours",
+#       ylab="Iant(mA)") 
+# dev.off()
 
-curve(I1n, 0, 120, col="red", main="Courant estimé antenne Vs tours - Carte 1",  xlab="Tours",
-      ylab="Iant(mA)") 
-dev.off()
+p<-plotFunction("I1n", 0, 120, "Courant estimé antenne Vs tours - Carte 1", "Tours", "Iant(mA)")
+print(p)
+saveGraphPng("I1", p)
 
 
 # Ajustement 7 - Carte 2
@@ -529,22 +554,19 @@ print(summary(mod7))
 R2Est<-function(N){mod7$coefficients[1]  + mod7$coefficients[2] * N +   mod7$coefficients[3] * N^2}
 p<-(ggplot(TAB) + geom_point(aes(x = N, y = R2), colour = "#4271AE")  + stat_function(fun = R2Est, color = "red") +  ggtitle("Résistance ant / tours - carte 2"))
 
-
-# jpeg("./plots/R2.jpg")
-# print(p)
-# dev.off()
-
-
 saveGraphPng("R2", p)
 
 
 
 
-jpeg("./plots/I2.jpg")
+# jpeg("./plots/I2.jpg")
+# curve(I2n, 0, 120, col="red", main="Courant estimé antenne Vs tours - carte 2",  xlab="Tours",
+#       ylab="Iant(mA)")
+# dev.off()
 
-curve(I2n, 0, 120, col="red", main="Courant estimé antenne Vs tours - carte 2",  xlab="Tours",
-      ylab="Iant(mA)")
-dev.off()
+p<-plotFunction("I2n", 0, 120, "Courant estimé antenne Vs tours - carte 2", "tours", "Iant(mA)")
+print(p)
+saveGraphPng("I2", p)
 
 # Ajustement 8 - Carte 3
 
@@ -561,18 +583,14 @@ p<-(ggplot(TAB) + geom_point(aes(x = N, y = R3), colour = "#4271AE")  + stat_fun
 
 saveGraphPng("R3", p)
 
-# jpeg("./plots/R3.jpg")
-# print(p)
+# jpeg("./plots/I3.jpg")
+# curve(I3n, 0, 120, col="red", main="Courant estimé antenne Vs tours - carte 3",  xlab="Tours",
+#       ylab="Iant(mA)")
 # dev.off()
 
-
-
-
-jpeg("./plots/I3.jpg")
-
-curve(I3n, 0, 120, col="red", main="Courant estimé antenne Vs tours - carte 3",  xlab="Tours",
-      ylab="Iant(mA)")
-dev.off()
+p<-plotFunction("I3n", 0, 120, "Courant estimé antenne Vs tours - carte 3", "Tours", "Iant(mA)" )
+print(p)
+saveGraphPng("I3", p)
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -590,49 +608,54 @@ p<- (ggplot(TAB, color=c("neutre", "carte 1", "carte 2", "carte 3"))
      ) 
 )
 
-# png("./plots/globalR.png")
-# print(p)
-# dev.off()
+
 
 saveGraphPng("globalR", p)
-
-# -------------------------------------------------------------------------------------------------------------------------- 
-
 
 
 # ---------------------------------------------------------------------------------------------------------------------------
 
 # Représentation du champ par carte 
 
-jpeg("./plots/champ0.jpg")
-curve(B0est, 0, 120, col="red", main="Champ estimé Vs tours - neutre",  xlab="Tours",
-      ylab="Champ")
+# jpeg("./plots/champ0.jpg")
+# curve(B0est, 0, 120, col="red", main="Champ estimé Vs tours - neutre",  xlab="Tours",
+#       ylab="Champ")
+# 
+# dev.off()
 
-dev.off()
-
-
-jpeg("./plots/champ1.jpg")
-
-curve(B1est, 0, 120, col="red", main="Champ estimé Vs tours - carte 1",  xlab="Tours",
-      ylab="Champ")
-
-dev.off()
+p<-plotFunction("B0est", 0, 120, "Champ estimé Vs tours - neutre", "tours", "Champ")
+print(p)
+saveGraphPng("champ0", p)
 
 
-jpeg("./plots/champ2.jpg")
+# jpeg("./plots/champ1.jpg")
+# curve(B1est, 0, 120, col="red", main="Champ estimé Vs tours - carte 1",  xlab="Tours",
+#       ylab="Champ")
+# dev.off()
 
-curve(B2est, 0, 120, col="red", main="Champ estimé Vs tours - carte 2",  xlab="Tours",
-      ylab="Champ")
+p<-plotFunction("B1est", 0, 120, "Champ estimé Vs tours - carte 1", "Tours", "Champ" )
+print(p)
+saveGraphPng("champ1", p)
 
-dev.off()
+# jpeg("./plots/champ2.jpg")
+# curve(B2est, 0, 120, col="red", main="Champ estimé Vs tours - carte 2",  xlab="Tours",
+#       ylab="Champ")
+# dev.off()
+
+p<-plotFunction("B2est", 0, 120, "Champ estimé Vs tours - carte 2", "Tours", "Champ")
+print(p)
+saveGraphPng("champ2", p)
 
 
-jpeg("./plots/champ3.jpg")
+# jpeg("./plots/champ3.jpg")
+# curve(B3est, 0, 120, col="red", main="Champ estimé Vs tours - carte 3",  xlab="Tours",
+#       ylab="Champ")
+# dev.off()
 
-curve(B3est, 0, 120, col="red", main="Champ estimé Vs tours - carte 3",  xlab="Tours",
-      ylab="Champ")
+p<-plotFunction("B3est", 0, 120, "Champ estimé Vs tours - carte 3", "Tours", "Champ" )
+print(p)
+saveGraphPng("champ3", p)
 
-dev.off()
 
 # ---------------------------------------------------------------------------------------------------------------------------
 
@@ -662,9 +685,6 @@ p<-(
 )
 
 saveGraphPng("champs", p)
-# png("./plots/champs.png")
-# print(p)
-# dev.off()
 
 # ---------------------------------------------------------------------------------------------------------------------------
 
@@ -694,9 +714,7 @@ p<-(
   ) 
 )
 saveGraphPng("courants", p)
-# png("./plots/courants.png")
-# print(p)
-# dev.off()
+
 
 # --------------------------------------------------------------------------------------------------------------------------------
 
@@ -811,12 +829,9 @@ print(summary(mod9))
 
 LN68Est<-function(F){mod9$coefficients[1]  + mod9$coefficients[2] * F +   mod9$coefficients[3] * F^2}
 p<-(ggplot(CORN68) + geom_point(aes(x = F, y = L), colour = "#4271AE")  + stat_function(fun = LN68Est, color = "red") +  ggtitle("Inductance vs Fréquence - N=68") 
-    # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
+  
 )
 
-# png("./plots/LN68.png")
-# print(p)
-# dev.off()
 
 saveGraphPng("LN68", p)
 
@@ -828,11 +843,9 @@ print(summary(mod10))
 
 LN73Est<-function(F){mod10$coefficients[1]  + mod10$coefficients[2] * F +   mod10$coefficients[3] * F^2}
 p<-(ggplot(CORN73) + geom_point(aes(x = F, y = L), colour = "#4271AE")  + stat_function(fun = LN73Est, color = "red") +  ggtitle("Inductance vs Fréquence - N=73") 
-    # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
+ 
 )
-# png("./plots/LN73.png")
-# print(p)
-# dev.off()
+
 
 saveGraphPng("LN73", p)
 
@@ -844,12 +857,10 @@ print(summary(mod11))
 
 LN90Est<-function(F){mod11$coefficients[1]  + mod11$coefficients[2] * F +   mod11$coefficients[3] * F^2}
 p<-(ggplot(CORN90) + geom_point(aes(x = F, y = L), colour = "#4271AE")  + stat_function(fun = LN90Est, color = "red") +  ggtitle("Inductance vs Fréquence - N=90") 
-    # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
+ 
 )
 
-# png("./plots/LN90.png")
-# print(p)
-# dev.off()
+
 
 saveGraphPng("LN90", p)
 
@@ -861,12 +872,10 @@ print(summary(mod11))
 
 LN120Est<-function(F){mod12$coefficients[1]  + mod12$coefficients[2] * F +   mod12$coefficients[3] * F^2}
 p<-(ggplot(CORN120) + geom_point(aes(x = F, y = L), colour = "#4271AE")  + stat_function(fun = LN120Est, color = "red") +  ggtitle("Inductance vs Fréquence - N=120") 
-    # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
+  
 )
 
-# png("./plots/LN120.png")
-# print(p)
-# dev.off()
+
 
 saveGraphPng("LN120", p)
 
@@ -901,9 +910,7 @@ p<-(
   ) 
 )
 
-# png("./plots/dependanceF.png")
-# print(p)
-# dev.off()
+
 
 saveGraphPng("dependanceF", p)
 #--------------------------------------------------------------------------------------------------------
@@ -990,9 +997,7 @@ p<-(
 )
 
 
-# png("./plots/simulN80vsFreq.png")
-# print(p)
-# dev.off()
+
 saveGraphPng("simulN80vsFreq", p)
 
 p<-(
@@ -1010,9 +1015,7 @@ p<-(
   ) 
 )
 
-# png("./plots/simulN100vsFreq.png")
-# print(p)
-# dev.off()
+
 
 saveGraphPng("simulN100vsFreq", p)
 
@@ -1032,9 +1035,6 @@ p<-(
   ) 
 )
 
-# png("./plots/simulN70vsFreq.png")
-# print(p)
-# dev.off()
 
 saveGraphPng("simulN70vsFreq", p)
 
@@ -1068,11 +1068,9 @@ print(summary(mod21))
 
 RN68Est<-function(F){mod21$coefficients[1]  + mod21$coefficients[2] * F +   mod21$coefficients[3] * F^2}
 p<-(ggplot(CORN68) + geom_point(aes(x = F, y = R), colour = "#4271AE")  + stat_function(fun = RN68Est, color = "red") +  ggtitle("Résistance vs Fréquence - N=68") 
-    # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
+   
 )
-# png("./plots/RN68.png")
-# print(p)
-# dev.off()
+
 
 saveGraphPng("RN68", p)
 
@@ -1084,11 +1082,9 @@ print(summary(mod22))
 
 RN73Est<-function(F){mod22$coefficients[1]  + mod22$coefficients[2] * F +   mod22$coefficients[3] * F^2}
 p<-(ggplot(CORN73) + geom_point(aes(x = F, y = R), colour = "#4271AE")  + stat_function(fun = RN73Est, color = "red") +  ggtitle("Résistance vs Fréquence - N=73") 
-    # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
+    
 )
-# png("./plots/RN73.png")
-# print(p)
-# dev.off()
+
 
 saveGraphPng("RN73", p)
 
@@ -1100,12 +1096,10 @@ print(summary(mod23))
 
 RN90Est<-function(F){mod23$coefficients[1]  + mod23$coefficients[2] * F +   mod23$coefficients[3] * F^2}
 p<-(ggplot(CORN90) + geom_point(aes(x = F, y = R), colour = "#4271AE")  + stat_function(fun = RN90Est, color = "red") +  ggtitle("Résistance vs Fréquence - N=90") 
-    # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
+  
 )
 
-# png("./plots/RN90.png")
-# print(p)
-# dev.off()
+
 
 saveGraphPng("RN90", p)
 
@@ -1117,11 +1111,9 @@ print(summary(mod24))
 
 RN120Est<-function(F){mod24$coefficients[1]  + mod24$coefficients[2] * F +   mod24$coefficients[3] * F^2}
 p<-(ggplot(CORN120) + geom_point(aes(x = F, y = R), colour = "#4271AE")  + stat_function(fun = RN120Est, color = "red") +  ggtitle("Résistance vs Fréquence - N=120") 
-    # +  geom_hline(yintercept=1.62, linetype="dashed", color = "red")
+  
 )
-# png("./plots/RN120.png")
-# print(p)
-# dev.off()
+
 
 saveGraphPng("RN120", p)
 
@@ -1158,9 +1150,7 @@ p<-(
   ) 
 )
 
-# png("./plots/dependanceRvsF.png")
-# print(p)
-# dev.off()
+
 
 saveGraphPng("dependanceRvs", p)
 
@@ -1248,9 +1238,7 @@ p<-(
   ) 
 )
 
-# png("./plots/simulRN80vsFreq.png")
-# print(p)
-# dev.off()
+
 
 saveGraphPng("simulRN80vsFreq", p)
 
@@ -1269,9 +1257,7 @@ p<-(
   ) 
 )
 
-# png("./plots/simulRN100vsFreq.png")
-# print(p)
-# dev.off()
+
 
 saveGraphPng("simulRN100vsFreq", p)
 
@@ -1292,9 +1278,6 @@ p<-(
   ) 
 )
 
-# png("./plots/simulRN70vsFreq.png")
-# print(p)
-# dev.off()
 
 saveGraphPng("simulRN70vsFreq", p)
 
