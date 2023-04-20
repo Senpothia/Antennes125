@@ -457,26 +457,6 @@ saveGraphPng("global", p)
 # Courant d'antenne théorique
 
 
-
-#p<(curve(Iant, 0, 500, col="red", main="Courant théorique antenne Vs Résistance antenne",  xlab="Résistance(Ohms)", ylab="Iant(mA)"))
-
- # jpeg("./plots/Ith.jpg")
- # 
- # curve(Iant, 0, 500, col="red", main="Courant théorique antenne Vs Résistance antenne",  xlab="Résistance(Ohms)",
- #       ylab="Iant(mA)")
- # dev.off()
-
-
-# x <- seq(0, 500, by=1)
-# val <- data.frame(x = x, y = Iant(x))
-# p<-(
-#   ggplot(data = val, aes(x = x, y = y))+#, color="red")) +
-#     geom_line(color="red") +
-#     scale_x_continuous(name = "Résistance(Ohms)")+
-#     scale_y_continuous(name = "Iant(mA)")+
-#     ggtitle("Courant théorique antenne Vs Résistance antenne")
-# )
-
 p<-plotFunction("Iant", 0, 500, "Courant théorique antenne Vs Résistance antenne", "Résistance(Ohms)", "Iant(mA)")
 print(p)
 saveGraphPng("Ith", p)
@@ -503,11 +483,6 @@ p<-(ggplot(TAB) + geom_point(aes(x = N, y = Rn), colour = "#4271AE")  + stat_fun
 saveGraphPng("R0", p)
 
 
-# jpeg("./plots/I0.jpg")
-# curve(I0n, 0, 120, col="red", main="Courant estimé antenne Vs tours - Neutre",  xlab="Tours",
-#       ylab="Iant(mA)")
-# dev.off()
-
 p<-plotFunction("I0n", 0, 120, "Courant estimé antenne Vs tours - Neutre", "Tours", "Iant(mA)")
 print(p)
 saveGraphPng("I0", p)
@@ -528,13 +503,6 @@ p<-( ggplot(TAB) + geom_point(aes(x = N, y = R1), colour = "#4271AE")  + stat_fu
 
 saveGraphPng("R1", p)
 
-
-
-
-# jpeg("./plots/I1.jpg")
-# curve(I1n, 0, 120, col="red", main="Courant estimé antenne Vs tours - Carte 1",  xlab="Tours",
-#       ylab="Iant(mA)") 
-# dev.off()
 
 p<-plotFunction("I1n", 0, 120, "Courant estimé antenne Vs tours - Carte 1", "Tours", "Iant(mA)")
 print(p)
@@ -557,13 +525,6 @@ p<-(ggplot(TAB) + geom_point(aes(x = N, y = R2), colour = "#4271AE")  + stat_fun
 saveGraphPng("R2", p)
 
 
-
-
-# jpeg("./plots/I2.jpg")
-# curve(I2n, 0, 120, col="red", main="Courant estimé antenne Vs tours - carte 2",  xlab="Tours",
-#       ylab="Iant(mA)")
-# dev.off()
-
 p<-plotFunction("I2n", 0, 120, "Courant estimé antenne Vs tours - carte 2", "tours", "Iant(mA)")
 print(p)
 saveGraphPng("I2", p)
@@ -583,10 +544,6 @@ p<-(ggplot(TAB) + geom_point(aes(x = N, y = R3), colour = "#4271AE")  + stat_fun
 
 saveGraphPng("R3", p)
 
-# jpeg("./plots/I3.jpg")
-# curve(I3n, 0, 120, col="red", main="Courant estimé antenne Vs tours - carte 3",  xlab="Tours",
-#       ylab="Iant(mA)")
-# dev.off()
 
 p<-plotFunction("I3n", 0, 120, "Courant estimé antenne Vs tours - carte 3", "Tours", "Iant(mA)" )
 print(p)
@@ -617,40 +574,18 @@ saveGraphPng("globalR", p)
 
 # Représentation du champ par carte 
 
-# jpeg("./plots/champ0.jpg")
-# curve(B0est, 0, 120, col="red", main="Champ estimé Vs tours - neutre",  xlab="Tours",
-#       ylab="Champ")
-# 
-# dev.off()
 
 p<-plotFunction("B0est", 0, 120, "Champ estimé Vs tours - neutre", "tours", "Champ")
 print(p)
 saveGraphPng("champ0", p)
 
-
-# jpeg("./plots/champ1.jpg")
-# curve(B1est, 0, 120, col="red", main="Champ estimé Vs tours - carte 1",  xlab="Tours",
-#       ylab="Champ")
-# dev.off()
-
 p<-plotFunction("B1est", 0, 120, "Champ estimé Vs tours - carte 1", "Tours", "Champ" )
 print(p)
 saveGraphPng("champ1", p)
 
-# jpeg("./plots/champ2.jpg")
-# curve(B2est, 0, 120, col="red", main="Champ estimé Vs tours - carte 2",  xlab="Tours",
-#       ylab="Champ")
-# dev.off()
-
 p<-plotFunction("B2est", 0, 120, "Champ estimé Vs tours - carte 2", "Tours", "Champ")
 print(p)
 saveGraphPng("champ2", p)
-
-
-# jpeg("./plots/champ3.jpg")
-# curve(B3est, 0, 120, col="red", main="Champ estimé Vs tours - carte 3",  xlab="Tours",
-#       ylab="Champ")
-# dev.off()
 
 p<-plotFunction("B3est", 0, 120, "Champ estimé Vs tours - carte 3", "Tours", "Champ" )
 print(p)
@@ -1338,7 +1273,6 @@ RforI<-function(R){  # Fonction d'optimisation (R pour Iant donné)
   return(abs(IantA(R) - Iantenne2))
   
 }
-
 
 
 #-------------------------------------------------------------------------------------------------------------
