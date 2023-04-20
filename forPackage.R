@@ -23,7 +23,7 @@ c2<-(39e-12*1.5e-9)/(39e-12+1.5e-9)  # Influence pont capacitif
 
 # Change reference frequency
 
-setFrequency<-function(freq){
+setRefFrequency<-function(freq){
   
   F0<-freq
 }
@@ -40,16 +40,18 @@ setCdv2<-function(c){
   
 }
 
-# Load data file
+# Load data file for measurements and factors corrections
 
 getMeasures<-function(file){
  
-  file<-paste("./data/",as.character(file))
-  file<-paste(file,".csv")
-  TAB<-read.table(dataSource,header=TRUE,sep=";",dec=",")
+  file<-paste("./data/",file, sep="")
+  file<-paste(file,".csv", sep="")
+  TAB<-read.table(file,header=TRUE,sep=";",dec=",")
   return(TAB)
   
 }
+
+
 
 saveGraphPng<-function(fileName, p){
   
@@ -174,9 +176,9 @@ Cres3<-function(N){
   
 }
 
-Cresonnance<-function(L){  # Fréquence de résonnance à 125kHz pour L en Henry 
+Cresonnance<-function(L, F=125000){  # Fréquence de résonnance à 125kHz pour L en Henry 
   
-  return(1/((2*pi*125000)^2*L*1e-03) - c2)
+  return(1/((2*pi*F)^2*L*1e-03) - c2)
 }
 
 Vant<-function(N, R, L){
@@ -238,6 +240,7 @@ Fmin<-function(N){
   
 }
 
+# Correction des facteur de L=f(N)
 
 inter<-function(N){
   
@@ -282,6 +285,7 @@ Estimateur2<-function(N, F){
   
 }
 
+# Correction des facteur de R=f(N)
 
 interR<-function(N){
   
@@ -333,7 +337,7 @@ Lattendue<- function(C) {
 } 
 
 
-plotFunction<-function(func, xm, xM, titre, xlab, ylab){
+plotFunction<-function(func, xm, xM, main, xlab, ylab){
   
   fonction<-parse(text=func)
   fonction<-eval(fonction)
@@ -344,13 +348,10 @@ plotFunction<-function(func, xm, xM, titre, xlab, ylab){
       geom_line(color="red") + 
       scale_x_continuous(name = xlab) +
       scale_y_continuous(name = ylab) +
-      ggtitle(titre)
+      ggtitle(main)
   )
   
 }
-
-
-
 
 
 
@@ -738,7 +739,9 @@ dev.off()
 #-----------------------------------------------------------------------------------------------------------------------------
 # Facteur de correction
 
-COR<-read.table("./data/correction2.csv",header=TRUE,sep=";",dec=",")
+#COR<-read.table("./data/correction2.csv",header=TRUE,sep=";",dec=",")
+
+COR<-getMeasures("correction2")
 
 COR10<-COR[COR$F == 10.0, ]
 COR20<-COR[COR$F == 20.0, ]
