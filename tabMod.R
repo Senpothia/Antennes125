@@ -1,21 +1,114 @@
 #Test tableau de modèles
 
-TAB<-read.table("./data/mesures.csv",header=TRUE,sep=";",dec=",")
+#TAB<-read.table("./data/mesures.csv",header=TRUE,sep=";",dec=",")
+TAB<-read.table("./data/releve.csv",header=TRUE,sep=";",dec=",")
 
-mod1 <- lm(TAB$Ln~TAB$N+I(TAB$N^2), data=TAB)
-mod2 <- lm(TAB$L1~TAB$N+I(TAB$N^2), data=TAB)
-mod3 <- lm(TAB$L2~TAB$N+I(TAB$N^2), data=TAB)
-mod4 <- lm(TAB$L3~TAB$N+I(TAB$N^2), data=TAB)
+MODSLN<-list()
+MODSRN<-list()
 
-MODSL<-list(mod1, mod2, mod3, mod4)
+MODSLF<-list()
+MODSRF<-list()
+
+# MODSLN<-list()
+# 
+# mod1 <- lm(TAB$Ln~TAB$N+I(TAB$N^2), data=TAB)
+# mod2 <- lm(TAB$L1~TAB$N+I(TAB$N^2), data=TAB)
+# mod3 <- lm(TAB$L2~TAB$N+I(TAB$N^2), data=TAB)
+# mod4 <- lm(TAB$L3~TAB$N+I(TAB$N^2), data=TAB)
+# 
+# MODSLN[[1]]<-mod1
+# MODSLN[[2]]<-mod2
+# MODSLN[[3]]<-mod3
+# MODSLN[[4]]<-mod4
+# 
+# #MODSL<-list(mod1, mod2, mod3, mod4)
+# 
+# 
+# MODSRN<-list()
+# 
+# mod5 <- lm(TAB$Rn~TAB$N+I(TAB$N^2), data=TAB)
+# mod6 <- lm(TAB$R1~TAB$N+I(TAB$N^2), data=TAB)
+# mod7 <- lm(TAB$R2~TAB$N+I(TAB$N^2), data=TAB)
+# mod8 <- lm(TAB$R3~TAB$N+I(TAB$N^2), data=TAB)
+# 
+# MODSRN[[1]]<-mod5
+# MODSRN[[2]]<-mod6
+# MODSRN[[3]]<-mod7
+# MODSRN[[4]]<-mod8
+
+#MODSR<-list(mod5, mod6, mod7, mod8)
+
+#frqs<-nrow(table(TAB$F)) # Nbre de fréquence de mesures
+#echs<-nrow(table(TAB$ech)) # Nbre d'échantillons
+#attributes(table(TAB$F)) # voir les attibuts d'un objet  
+#v<-attributes(table(TAB$F))[2] #liste des fréquences - ne pas utiliser
 
 
-mod5 <- lm(TAB$Rn~TAB$N+I(TAB$N^2), data=TAB)
-mod6 <- lm(TAB$R1~TAB$N+I(TAB$N^2), data=TAB)
-mod7 <- lm(TAB$R2~TAB$N+I(TAB$N^2), data=TAB)
-mod8 <- lm(TAB$R3~TAB$N+I(TAB$N^2), data=TAB)
+frequencies<-unique(TAB$F)     # Listes des fréquences 
+echs<-unique(TAB$ech)
+nTypes<-unique(TAB$N)
 
-MODSR<-list(mod5, mod6, mod7, mod8)
+
+# pour F=f0 
+# 1- L=f(N)
+# 2- R=f(N)
+
+
+#pour N=no 
+# 1- L=g(F)
+# 2- R=g(F)
+
+
+
+  
+j<-1
+    
+for(i in frequencies){
+     
+    
+     VAL=TAB[TAB$F == i,]
+     modL <- lm(VAL$L~VAL$N+I(VAL$N^2), data=VAL)
+     MODSLN[[j]]<-modL
+     j<-j+1
+  
+}
+
+j<-1
+
+for(i in frequencies){
+  
+  
+  VAL=TAB[TAB$F == i,]
+  modR <- lm(VAL$R~VAL$N+I(VAL$N^2), data=VAL)
+  MODSRN[[j]]<-modR
+  j<-j+1
+  
+}
+
+
+j<-1
+
+for(i in nTypes){
+  
+  
+  VAL=TAB[TAB$N == i,]
+  modL <- lm(VAL$L~VAL$F+I(VAL$F^2), data=VAL)
+  MODSLF[[j]]<-modL
+  j<-j+1
+  
+}
+
+j<-1
+
+for(i in nTypes){
+  
+  
+  VAL=TAB[TAB$N == i,]
+  modR <- lm(VAL$R~VAL$F+I(VAL$F^2), data=VAL)
+  MODSRF[[j]]<-modR
+  j<-j+1
+  
+}
 
 n<-c(1, 2, 3)
 i<-1
@@ -43,7 +136,6 @@ f2<-function(N){        # Fonctionnel. Appel:  f2(10). f1s est une expression en
 op <- function(N, func) {  # Fonctionnel. Appel: op(60, f1s) f1s est une expression en string
                            # f1s <- "MODS[[1]]$coefficients[ 1 ] + MODS[[1]]$coefficients[ 2 ]*N+ MODS[[1]]$coefficients[ 3 ]*N^2"
   
-
   fonction<-parse(text=func)
   y<-eval(fonction)
   return (y)
