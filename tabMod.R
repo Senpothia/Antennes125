@@ -1,124 +1,189 @@
 #Test tableau de modèles
 
 #TAB<-read.table("./data/mesures.csv",header=TRUE,sep=";",dec=",")
-TAB<-read.table("./data/releve.csv",header=TRUE,sep=";",dec=",")
+#TAB<-read.table("./data/data.csv",header=TRUE,sep=",",dec=".")
 
-MODSLN<-list()
-MODSRN<-list()
+# Load data file for measurements and factors corrections
 
-MODSLF<-list()
-MODSRF<-list()
+getMeasures<-function(file, s=";", d=","){
+  
+  file<-paste("./data/",file, sep="")
+  file<-paste(file,".csv", sep="")
+  TAB<-read.table(file,header=TRUE,sep=s,dec=d)
+  return(TAB)
+  
+}
 
+# 
 # MODSLN<-list()
-# 
-# mod1 <- lm(TAB$Ln~TAB$N+I(TAB$N^2), data=TAB)
-# mod2 <- lm(TAB$L1~TAB$N+I(TAB$N^2), data=TAB)
-# mod3 <- lm(TAB$L2~TAB$N+I(TAB$N^2), data=TAB)
-# mod4 <- lm(TAB$L3~TAB$N+I(TAB$N^2), data=TAB)
-# 
-# MODSLN[[1]]<-mod1
-# MODSLN[[2]]<-mod2
-# MODSLN[[3]]<-mod3
-# MODSLN[[4]]<-mod4
-# 
-# #MODSL<-list(mod1, mod2, mod3, mod4)
-# 
-# 
 # MODSRN<-list()
 # 
-# mod5 <- lm(TAB$Rn~TAB$N+I(TAB$N^2), data=TAB)
-# mod6 <- lm(TAB$R1~TAB$N+I(TAB$N^2), data=TAB)
-# mod7 <- lm(TAB$R2~TAB$N+I(TAB$N^2), data=TAB)
-# mod8 <- lm(TAB$R3~TAB$N+I(TAB$N^2), data=TAB)
+# MODSLF<-list()
+# MODSRF<-list()
 # 
-# MODSRN[[1]]<-mod5
-# MODSRN[[2]]<-mod6
-# MODSRN[[3]]<-mod7
-# MODSRN[[4]]<-mod8
+# frequencies<-unique(TAB$F)     # Listes des fréquences 
+# echs<-unique(TAB$ech)
+# nTypes<-unique(TAB$N)
+# 
+# 
+# # pour F=f0 
+# # 1- L=f(N)
+# # 2- R=f(N)
+# 
+# 
+# #pour N=no 
+# # 1- L=g(F)
+# # 2- R=g(F)
+# 
+# 
+# #---------------------    Courbes paramétrées par F      ------------------------------
+# 
+# # Inductance vs N paramétrée en F
+# j<-1
+#     
+# for(i in frequencies){
+#      
+#     
+#      VAL=TAB[TAB$F == i,]
+#      modL <- lm(VAL$L~VAL$N+I(VAL$N^2), data=VAL)
+#      MODSLN[[j]]<-modL
+#      j<-j+1
+#   
+# }
+# 
+# # Résistance vs N paramétrée en F
+# 
+# j<-1
+# 
+# for(i in frequencies){
+#   
+#   
+#   VAL=TAB[TAB$F == i,]
+#   modR <- lm(VAL$R~VAL$N+I(VAL$N^2), data=VAL)
+#   MODSRN[[j]]<-modR
+#   j<-j+1
+#   
+# }
+# 
+# # ---------------    Courbes paramétrées par N   -------------------------------
+# # Inductance vs F paramétrée en N
+# 
+# j<-1
+# 
+# for(i in nTypes){
+#   
+#   
+#   VAL=TAB[TAB$N == i,]
+#   modL <- lm(VAL$L~VAL$F+I(VAL$F^2), data=VAL)
+#   MODSLF[[j]]<-modL
+#   j<-j+1
+#   
+# }
+# 
+# 
+# # Résistance vs F paramétrée en N
+# 
+# j<-1
+# 
+# for(i in nTypes){
+#   
+#   
+#   VAL=TAB[TAB$N == i,]
+#   modR <- lm(VAL$R~VAL$F+I(VAL$F^2), data=VAL)
+#   MODSRF[[j]]<-modR
+#   j<-j+1
+#   
+# }
 
-#MODSR<-list(mod5, mod6, mod7, mod8)
-
-#frqs<-nrow(table(TAB$F)) # Nbre de fréquence de mesures
-#echs<-nrow(table(TAB$ech)) # Nbre d'échantillons
-#attributes(table(TAB$F)) # voir les attibuts d'un objet  
-#v<-attributes(table(TAB$F))[2] #liste des fréquences - ne pas utiliser
-
-
-frequencies<-unique(TAB$F)     # Listes des fréquences 
-echs<-unique(TAB$ech)
-nTypes<-unique(TAB$N)
-
-
-# pour F=f0 
-# 1- L=f(N)
-# 2- R=f(N)
-
-
-#pour N=no 
-# 1- L=g(F)
-# 2- R=g(F)
-
-
-#---------------------    Courbes paramétrées par F      ------------------------------
-
-# Inductance vs N paramétrée en F
-j<-1
+getModels<-function(TAB){
+  
+  MODSLN<-list()
+  MODSRN<-list()
+  
+  MODSLF<-list()
+  MODSRF<-list()
+  
+  nameList<-c("MODSLN", "MODSRN", "MODSLF", "MODSRF")
+  
+  frequencies<-sort(unique(TAB$F))     # Listes des fréquences 
+  echs<-sort(unique(TAB$ech))
+  nTypes<-sort(unique(TAB$N))
+  
+  
+  # pour F=f0 
+  # 1- L=f(N)
+  # 2- R=f(N)
+  
+  
+  #pour N=no 
+  # 1- L=g(F)
+  # 2- R=g(F)
+  
+  
+  #---------------------    Courbes paramétrées par F      ------------------------------
+  
+  # Inductance vs N paramétrée en F
+  j<-1
+  
+  for(i in frequencies){
     
-for(i in frequencies){
-     
     
-     VAL=TAB[TAB$F == i,]
-     modL <- lm(VAL$L~VAL$N+I(VAL$N^2), data=VAL)
-     MODSLN[[j]]<-modL
-     j<-j+1
+    VAL=TAB[TAB$F == i,]
+    modL <- lm(VAL$L~VAL$N+I(VAL$N^2), data=VAL)
+    MODSLN[[j]]<-modL
+    j<-j+1
+    
+  }
+  
+  # Résistance vs N paramétrée en F
+  
+  j<-1
+  
+  for(i in frequencies){
+    
+    
+    VAL=TAB[TAB$F == i,]
+    modR <- lm(VAL$R~VAL$N+I(VAL$N^2), data=VAL)
+    MODSRN[[j]]<-modR
+    j<-j+1
+    
+  }
+  
+  # ---------------    Courbes paramétrées par N   -------------------------------
+  # Inductance vs F paramétrée en N
+  
+  j<-1
+  
+  for(i in nTypes){
+    
+    
+    VAL=TAB[TAB$N == i,]
+    modL <- lm(VAL$L~VAL$F+I(VAL$F^2), data=VAL)
+    MODSLF[[j]]<-modL
+    j<-j+1
+    
+  }
+  
+  
+  # Résistance vs F paramétrée en N
+  
+  j<-1
+  
+  for(i in nTypes){
+    
+    
+    VAL=TAB[TAB$N == i,]
+    modR <- lm(VAL$R~VAL$F+I(VAL$F^2), data=VAL)
+    MODSRF[[j]]<-modR
+    j<-j+1
+    
+  }
+  
+  MODS<-list(MODSLF, MODSRF, MODSLN, MODSRN)
+  names(MODS)<-c("MODSLF", "MODSRF", "MODSLN", "MODSRN")
+  return(MODS)
   
 }
-
-# Résistance vs N paramétrée en F
-
-j<-1
-
-for(i in frequencies){
-  
-  
-  VAL=TAB[TAB$F == i,]
-  modR <- lm(VAL$R~VAL$N+I(VAL$N^2), data=VAL)
-  MODSRN[[j]]<-modR
-  j<-j+1
-  
-}
-
-# ---------------    Courbes paramétrées par N   -------------------------------
-# Inductance vs F paramétrée en N
-
-j<-1
-
-for(i in nTypes){
-  
-  
-  VAL=TAB[TAB$N == i,]
-  modL <- lm(VAL$L~VAL$F+I(VAL$F^2), data=VAL)
-  MODSLF[[j]]<-modL
-  j<-j+1
-  
-}
-
-
-# Résistance vs F paramétrée en N
-
-j<-1
-
-for(i in nTypes){
-  
-  
-  VAL=TAB[TAB$N == i,]
-  modR <- lm(VAL$R~VAL$F+I(VAL$F^2), data=VAL)
-  MODSRF[[j]]<-modR
-  j<-j+1
-  
-}
-
-
 
 
 
@@ -180,6 +245,63 @@ estimByF<-function(i, F, groupe){ # Exemple d'appel: estimateur2(1, 80, "MODSR")
   
 }
 
+estimateurs<-function(models, groupe){
+  
+  EST<-list()
+  
+  # groupes: LN, RN, LF, RF
+  # models: liste de tous les models d'après le jeu de données traité
+  
+  if(groupe == "LN"){
+    
+    gr<-"MODSLN"
+  }
+  
+  if(groupe == "RN"){
+    
+    gr<-"MODSRN"
+  }
+  
+  if(groupe == "LF"){
+    
+    gr<-"MODSLF"
+  }
+  
+  
+  if(groupe == "RF"){
+    
+    gr<-"MODSRF"
+    
+  }
+  
+  # MDS<-parse(text=gr)
+  # MDS<-eval(MDS)
+  
+  i<-1
+   for(m in models[[gr]]){
+  
+  
+     est<-function(x){
+  
+       m$coefficients[1] +  m$coefficients[2]*x +  m$coefficients[3]*x^2
+  
+     }
+  
+     EST[[i]]<-est
+     i<-i+1
+  
+   }
+
+  return(EST)
+
+  #return(models[[gr]])
+  
+  
+}
+
+
+#  FONCTIONS DE GENERATION DE DONNEES
+
 genRF<-function(a, b, c, r){
   
   x<-c(10,20,28.5,40,50,66.6,100)
@@ -222,5 +344,11 @@ genLF<-function(a, b, c, r){
 # > eval(fonction)
 # (Intercept) 
 # 0.1530908 
+
+
+#frqs<-nrow(table(TAB$F)) # Nbre de fréquence de mesures
+#echs<-nrow(table(TAB$ech)) # Nbre d'échantillons
+#attributes(table(TAB$F)) # voir les attibuts d'un objet  
+#v<-attributes(table(TAB$F))[2] #liste des fréquences - ne pas utiliser
 
 #--------------------------------------------------------------------

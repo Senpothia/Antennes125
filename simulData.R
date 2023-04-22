@@ -13,6 +13,7 @@
 #---------------------------------------------------------------------------
 
 model<-function(F, N) {(0.01*N+1) * F^2 + (0.001*N-10) *F  + (0.02*N + 1)}
+
 f<-function(F){ model(F, 10)}  # N=60
 g<-function(F){ model(F, 80)}  # N=80
 h<-function(F){ model(F, 100)}  # N=100
@@ -47,7 +48,7 @@ inductancesBruit<-round(inductances + (rnorm(7)+1)*2,2)
 F<-rep(frequencies, 4)
 N<-c(rep(nTypes[1],7), rep(nTypes[2],7), rep(nTypes[3],7),rep(nTypes[4],7))
 
-data<-data.frame(echs, N, F, inductancesBruit)
+data<-data.frame(echs, N, F, inductancesBruit, inductancesBruit)
 colnames(data)[4] = "L"
 write.csv(data,"./data/data.csv", row.names = FALSE)
 
