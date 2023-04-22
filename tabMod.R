@@ -59,8 +59,9 @@ nTypes<-unique(TAB$N)
 # 2- R=g(F)
 
 
+#---------------------    Courbes paramétrées par F      ------------------------------
 
-  
+# Inductance vs N paramétrée en F
 j<-1
     
 for(i in frequencies){
@@ -72,6 +73,8 @@ for(i in frequencies){
      j<-j+1
   
 }
+
+# Résistance vs N paramétrée en F
 
 j<-1
 
@@ -85,6 +88,8 @@ for(i in frequencies){
   
 }
 
+# ---------------    Courbes paramétrées par N   -------------------------------
+# Inductance vs F paramétrée en N
 
 j<-1
 
@@ -98,6 +103,9 @@ for(i in nTypes){
   
 }
 
+
+# Résistance vs F paramétrée en N
+
 j<-1
 
 for(i in nTypes){
@@ -110,15 +118,21 @@ for(i in nTypes){
   
 }
 
+
+
+
+
+# --------------  TESTS DIVERS  ------------------------------------------------------
+
 n<-c(1, 2, 3)
 i<-1
 f1s<-paste("MODS[[1]]$coefficients[", as.character(n[i]), "] + MODS[[1]]$coefficients[", as.character(n[i+1]), "]*N+ MODS[[1]]$coefficients[", as.character(n[i+2]),"]*N^2")
 
-f<-function(N){
+f<-function(N){  # Fonctonnel. Appel: f(2)
   
   fonction<-parse(text="N+2")
   func=eval(fonction)
-  return(func(N))
+  return(func)
   
 }
 
@@ -142,15 +156,15 @@ op <- function(N, func) {  # Fonctionnel. Appel: op(60, f1s) f1s est une express
   
 }
 
-estimateur<-function(i, N){  # Exemple d'appel: estimateur(1, 80)
-    
-    #f1s<-paste("MODS[[1]]$coefficients[", as.character(n[i]), "] + MODS[[1]]$coefficients[", as.character(n[i+1]), "]*N+ MODS[[1]]$coefficients[", as.character(n[i+2]),"]*N^2")
-    #print(f1s)
-    return(MODS[[i]]$coefficients[1] + MODS[[i]]$coefficients[2]*N + MODS[[i]]$coefficients[3]*N^2)
-    
-}
+# estimateur<-function(i, N){  # Exemple d'appel: estimateur(1, 80)
+#     
+#     #f1s<-paste("MODS[[1]]$coefficients[", as.character(n[i]), "] + MODS[[1]]$coefficients[", as.character(n[i+1]), "]*N+ MODS[[1]]$coefficients[", as.character(n[i+2]),"]*N^2")
+#     #print(f1s)
+#     return(MODS[[i]]$coefficients[1] + MODS[[i]]$coefficients[2]*N + MODS[[i]]$coefficients[3]*N^2)
+#     
+# }
 
-estimateur2<-function(i, N, groupe){ # Exemple d'appel: estimateur2(1, 80, "MODSR")
+estimByN<-function(i, N, groupe){ # Exemple d'appel: estimateur2(1, 80, "MODSR")
   
   MDS<-parse(text=groupe)
   MDLS<-eval(MDS)
@@ -158,7 +172,33 @@ estimateur2<-function(i, N, groupe){ # Exemple d'appel: estimateur2(1, 80, "MODS
   
 }
 
+estimByF<-function(i, F, groupe){ # Exemple d'appel: estimateur2(1, 80, "MODSR")
+  
+  MDS<-parse(text=groupe)
+  MDLS<-eval(MDS)
+  return(MDLS[[i]]$coefficients[1] + MDLS[[i]]$coefficients[2]*F + MDLS[[i]]$coefficients[3]*F^2)
+  
+}
 
+genRF<-function(a, b, c, r){
+  
+  x<-c(10,20,28.5,40,50,66.6,100)
+  e<-rnorm(7)*4
+  print(e)
+  y = (a + b*x + c*x^2 + e)/r
+  return(y)
+    
+}
+
+genLF<-function(a, b, c, r){
+  
+  x<-c(10,20,28.5,40,50,66.6,100)
+  e<-rnorm(7)*4
+  print(e)
+  y = (a + b*x + c*x^2 + e)/r
+  return(y)
+  
+}
 
 # ----------------    Exemples Fonctionnels    -------------------------------
 
