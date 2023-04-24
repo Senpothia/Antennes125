@@ -70,9 +70,6 @@ for(k in 1:3){
       inductances<-append(inductances, L)
       echs<-append(echs, k)
     }
-    
-  
-  
 }
 
 inductancesBruit<-round(inductances + (rnorm(7)+1)*2,2)
@@ -81,8 +78,6 @@ N<-c(rep(nTypes[1],7), rep(nTypes[2],7), rep(nTypes[3],7),rep(nTypes[4],7))
 
 data<-data.frame(echs, N, F, inductancesBruit)
 colnames(data)[4] = "L"
-
-
 
 
 # Réprésentation des inductances
@@ -154,8 +149,6 @@ for(k in 1:3){
    
   }
 
-
-
 }
 
 resistancesBruit<-round(resistances + (rnorm(7)+1)*2,2)
@@ -163,10 +156,8 @@ F<-rep(frequencies, 4)
 N<-c(rep(nTypes[1],7), rep(nTypes[2],7), rep(nTypes[3],7),rep(nTypes[4],7))
 
 data<-data.frame(echs, N, F, inductancesBruit, resistancesBruit)
+colnames(data)[4] = "L"
 colnames(data)[5] = "R"
-
-
-
 
 # Réprésentation des résistances
 
