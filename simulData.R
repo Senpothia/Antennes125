@@ -35,10 +35,12 @@ plotFunction<-function(func, xm, xM, main, xlab, ylab){
   
 }
 
-facteur<-3.5
+# Modèle d'inductance
+
+facteurL<-700
 modL<-function(F, N) { 
-  y<-(0.008*N+1) * F^2 + (0.001*N-10) *F  + (0.02*N + 1)
-  return(y/facteur)  
+  y<-(0.001*N+1) * F^2 + (0.2*N-10) *F  + (0.8*N + 1)
+  return(y/facteurL)  
 }
 
 f<-function(F){ modL(F, 60)}  # N=60
@@ -51,6 +53,7 @@ curve(g,10,100,col="red", add=TRUE)
 curve(h,10,100,col="green", add=TRUE)
 curve(k,10,100,col="orange", add=TRUE)
 
+resistances<-c()
 inductances<-c()
 frequencies<-c(10,20,28.5,40,50,66.6,100)
 nTypes<-c(60, 80, 100, 120)
@@ -76,10 +79,10 @@ inductancesBruit<-round(inductances + (rnorm(7)+1)*2,2)
 F<-rep(frequencies, 4)
 N<-c(rep(nTypes[1],7), rep(nTypes[2],7), rep(nTypes[3],7),rep(nTypes[4],7))
 
-data<-data.frame(echs, N, F, inductancesBruit, inductancesBruit)
+data<-data.frame(echs, N, F, inductancesBruit)
 colnames(data)[4] = "L"
-colnames(data)[5] = "R"
-write.csv(data,"./data/data.csv", row.names = FALSE)
+
+
 
 
 # Réprésentation des inductances
@@ -120,4 +123,90 @@ for(e in unique(echs)){
 
 }
 
+
+# Modèle de résistance
+
+facteurR<-15
+modR<-function(F, N) {
+  y<-(0.08*N+1) * F^2 + (0.001*N-10) *F  + (0.02*N + 1)
+  return(y/facteurR)
+}
+
+fr<-function(F){ modR(F, 60)}  # N=60
+gr<-function(F){ modR(F, 80)}  # N=80
+hr<-function(F){ modR(F, 100)}  # N=100
+kr<-function(F){ modR(F, 120)}  # N=120
+
+curve(fr,10,100,col="blue", xlab = "F")
+curve(gr,10,100,col="red", add=TRUE)
+curve(hr,10,100,col="green", add=TRUE)
+curve(kr,10,100,col="orange", add=TRUE)
+
+
+# Génération des résistances
+
+for(k in 1:3){
+
+  for(i in nTypes){
+
+    R<-modR(c(10,20,28.5,40,50,66.6,100),i)
+    resistances<-append(resistances, R)
+   
+  }
+
+
+
+}
+
+resistancesBruit<-round(resistances + (rnorm(7)+1)*2,2)
+F<-rep(frequencies, 4)
+N<-c(rep(nTypes[1],7), rep(nTypes[2],7), rep(nTypes[3],7),rep(nTypes[4],7))
+
+data<-data.frame(echs, N, F, inductancesBruit, resistancesBruit)
+colnames(data)[5] = "R"
+
+
+
+
+# Réprésentation des résistances
+
+
+c<-0
+compteur<-1
+f<-seq(10, 100, by=1)
+VAL=data[data$N == 60 & data$echs==1,]
+plot(VAL$F, VAL$R)
+
+for(e in unique(echs)){
+  for (n in nTypes){
+
+
+    VAL=data[data$N == n & data$echs==e,]
+    mod <- lm(VAL$R~VAL$F+I(VAL$F^2), data=VAL)
+
+
+    print(summary(mod))
+
+    titre<-paste("Inductance / Fréquence - N=", as.character(n), "pour éch:", as.character(e))
+    Rest<-function(F){mod$coefficients[1]  + mod$coefficients[2] * F +   mod$coefficients[3] * F^2}
+    # p<-(ggplot(VAL) + geom_point(aes(x = F, y = L), colour = "#4271AE")  + stat_function(fun = Lest, color = "red") +  ggtitle(titre)
+    #
+    # )
+    # #png("L1.png")
+    # print(p)
+    # #dev.off()
+    print(paste("COMPTEUR:", compteur))
+    compteur<-compteur + 1
+
+
+    points(VAL$F, VAL$R)
+    lines(f, Rest(f), col=colr[c], add=TRUE)
+    c<-c + 1
+
+  }
+
+}
+
+
+write.csv(data,"./data/data.csv", row.names = FALSE)
 
