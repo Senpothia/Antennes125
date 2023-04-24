@@ -1,5 +1,6 @@
 
 library(ggplot2)
+library(insight)
 
 # f<-function(x) 2*x^2 + 10*x + 1
 # g<-function(x) 2.8*x^2 + 5*x + 1
@@ -17,6 +18,13 @@ library(ggplot2)
 #plot(VAL$F, VAL$L, type="l")
 #VAL=data[data$N == 80 & data$echs==1,]
 #lines(VAL$F, VAL$L, col="red")
+
+# p<-(ggplot(VAL) + geom_point(aes(x = F, y = L), colour = "#4271AE")  + stat_function(fun = Lest, color = "red") +  ggtitle(titre) 
+#   
+# )
+# #png("L1.png")
+# print(p)
+# #dev.off()
 
 #---------------------------------------------------------------------------
 plotFunction<-function(func, xm, xM, main, xlab, ylab){
@@ -100,12 +108,7 @@ for(e in unique(echs)){
     
     titre<-paste("Inductance / Fréquence - N=", as.character(n), "pour éch:", as.character(e))
     Lest<-function(F){mod$coefficients[1]  + mod$coefficients[2] * F +   mod$coefficients[3] * F^2}
-    # p<-(ggplot(VAL) + geom_point(aes(x = F, y = L), colour = "#4271AE")  + stat_function(fun = Lest, color = "red") +  ggtitle(titre) 
-    #   
-    # )
-    # #png("L1.png")
-    # print(p)
-    # #dev.off()
+   
     print(paste("COMPTEUR:", compteur))
     compteur<-compteur + 1
     
@@ -180,12 +183,7 @@ for(e in unique(echs)){
 
     titre<-paste("Inductance / Fréquence - N=", as.character(n), "pour éch:", as.character(e))
     Rest<-function(F){mod$coefficients[1]  + mod$coefficients[2] * F +   mod$coefficients[3] * F^2}
-    # p<-(ggplot(VAL) + geom_point(aes(x = F, y = L), colour = "#4271AE")  + stat_function(fun = Lest, color = "red") +  ggtitle(titre)
-    #
-    # )
-    # #png("L1.png")
-    # print(p)
-    # #dev.off()
+   
     print(paste("COMPTEUR:", compteur))
     compteur<-compteur + 1
 
@@ -197,6 +195,137 @@ for(e in unique(echs)){
   }
 
 }
+#--------------------------------------------------------------------------------------------------------
+
+#--------- AUTRE MODELE   -------------------------------------------------------------------------------
+
+# Génération des résistances
+
+facteurR<-1500
+resistances2<-c()
+modR2<-function(F, N) {
+  y<-(0.04*N^2+1) * F^2 + (0.001*N^2-10) *F  + (0.02*N^2 + 1)
+  return(y/facteurR)
+}
+
+for(k in 1:3){
+  
+  for(i in nTypes){
+    
+    R2<-modR2(c(10,20,28.5,40,50,66.6,100),i)
+    resistances2<-append(resistances2, R2)
+    
+  }
+  
+}
+
+data<-data.frame(echs, N, F, inductancesBruit, resistancesBruit, resistances2)
+colnames(data)[4] = "L"
+colnames(data)[5] = "R"
+colnames(data)[6] = "R2"
+
+
+# Réprésentation des résistances - modèle 2
+
+
+c<-0
+compteur<-1
+f<-seq(10, 100, by=1)
+VAL=data[data$N == 60 & data$echs==1,]
+plot(VAL$F, VAL$R2)
+
+for(e in unique(echs)){
+  for (n in nTypes){
+
+
+    VAL=data[data$N == n & data$echs==e,]
+    mod <- lm(VAL$R2~VAL$F+I(VAL$F^2), data=VAL)
+
+    
+    print(summary(mod))
+    titre<-paste("Inductance / Fréquence - N=", as.character(n), "pour éch:", as.character(e))
+    Rest2<-function(F){mod$coefficients[1]  + mod$coefficients[2] * F +   mod$coefficients[3] * F^2}
+   
+    print(paste("COMPTEUR:", compteur))
+    compteur<-compteur + 1
+
+
+    points(VAL$N, VAL$R2)
+    lines(f, Rest2(f), col=colr[c], add=TRUE)
+    c<-c + 1
+
+  }
+
+}
+
+
+
+
+#---------------------------------   Autre modèle - Inductance  -------------------------------------------------------------------------
+
+
+inductances2<-c()
+facteurI<-1500
+modI2<-function(F, N) {
+  y<-(0.08*N^2+1) * F^2 + (0.001*N^2-10) *F  + (0.02*N^2 + 1)
+  return(y/facteurI)
+}
+
+for(k in 1:3){
+  
+  for(i in nTypes){
+    
+    I2<-modI2(c(10,20,28.5,40,50,66.6,100),i)
+    inductances2<-append(inductances2, I2)
+    
+  }
+  
+}
+
+data<-data.frame(echs, N, F, inductancesBruit, resistancesBruit, resistances2, inductances2)
+colnames(data)[4] = "L"
+colnames(data)[5] = "R"
+colnames(data)[6] = "R2"
+colnames(data)[7] = "I2"
+
+
+# Réprésentation des inductances - modèle 2
+
+
+c<-0
+compteur<-1
+f<-seq(10, 100, by=1)
+VAL=data[data$N == 60 & data$echs==1,]
+plot(VAL$F, VAL$I2)
+
+for(e in unique(echs)){
+  for (n in nTypes){
+    
+    
+    VAL=data[data$N == n & data$echs==e,]
+    mod <- lm(VAL$I2~VAL$F+I(VAL$F^2), data=VAL)
+    
+    
+    print(summary(mod))
+    titre<-paste("Inductance / Fréquence - N=", as.character(n), "pour éch:", as.character(e))
+    Iest2<-function(F){mod$coefficients[1]  + mod$coefficients[2] * F +   mod$coefficients[3] * F^2}
+   
+    print(paste("COMPTEUR:", compteur))
+    compteur<-compteur + 1
+    
+    
+    points(VAL$N, VAL$I2)
+    lines(f, Iest2(f), col=colr[c], add=TRUE)
+    c<-c + 1
+    
+  }
+  
+}
+
+
+
+
+# Enregistrement des données
 
 
 write.csv(data,"./data/data.csv", row.names = FALSE)
