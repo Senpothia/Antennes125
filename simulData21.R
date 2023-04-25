@@ -27,10 +27,10 @@ for(k in 1:3){
     
     R2<-modR2(c(10,20,28.5,40,50,66.6,100),i)
     resistances2<-append(resistances2, R2)
-    echs<-append(echs, k)
+    echs<-append(echs, rep(k, 7))  
     
-  }
-  
+  } 
+
 }
 resistances2<-round(resistances2 + (rnorm(7)+1)*2,2)
 data<-data.frame(echs, N, F, resistances2)
@@ -46,7 +46,7 @@ c<-0
 compteur<-1
 f<-seq(10, 100, by=1)
 VAL=data[data$N == 60 & data$echs==1,]
-plot(VAL$F, VAL$R2, ylim=c(0, max(data$R2)+10))
+plot(VAL$F, VAL$R2, ylim=c(0, max(data$R2)+10), main="R2 vs F")
 
 for(e in unique(echs)){
   for (n in nTypes){
@@ -80,7 +80,7 @@ c<-0
 compteur<-1
 n<-seq(60, 120, by=1)
 VAL=data[data$F == 100 & data$echs==1,]
-plot(VAL$N, VAL$R2, ylim=c(0, max(data$R2)+10))
+plot(VAL$N, VAL$R2, ylim=c(0, max(data$R2)+10), main="R2 vs N")
 
 
 for(e in unique(echs)){
@@ -146,7 +146,7 @@ c<-0
 compteur<-1
 n<-seq(60, 120, by=1)
 VAL=data[data$F == 100 & data$echs==1,]
-plot(VAL$N, VAL$L2, ylim=c(0, max(data$L2)+10))
+plot(VAL$N, VAL$L2, ylim=c(0, max(data$L2)+10),  main="L2 vs N")
 
 
 for(e in unique(echs)){
@@ -179,8 +179,8 @@ for(e in unique(echs)){
 c<-0
 compteur<-1
 f<-seq(10, 100, by=1)
-VAL=data[data$N == 60 & data$echs==1,]
-plot(VAL$F, VAL$L2, ylim=c(0, max(data$L2)+10))
+# VAL=data[data$N == 60 & data$echs==1,]
+# plot(VAL$F, VAL$L2, ylim=c(0, max(data$L2)+10),  main="L2 vs F")
 
 for(e in unique(echs)){
   for (n in nTypes){
