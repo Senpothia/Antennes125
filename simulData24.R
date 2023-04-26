@@ -22,8 +22,8 @@ inductances2<-c()
 resistances2<-c()
 frequencies<-c(10,20,28.5,40,50,66.6,100)
 nTypes<-c(60, 80, 100, 120)
-
-colr<-c("blue", "red", "green", "orange")
+colrF=c("red", "blue", "green", "magenta", "orange", "cyan", "gray")
+colrN<-c("blue", "red", "green", "orange")
 
 facteurR<-30000
 facteurL<-50000
@@ -48,8 +48,12 @@ plot.new( )
 plot.window( xlim=c(60,120), ylim=c(0,max(data$L)))
 axis( side=1)
 axis( side=2, seq(0, 4000, by=80))
+title(main="Inductance vs N")
+legend(60, 1840, legend=c("F=10", "F=20", "F=28.5", "F=40","F=50", "F=66.6", "F=100"),
+       col=c("red", "blue", "green", "magenta", "orange", "cyan", "gray"), lty=rep(1,7))
 
 
+i<-0
 for(fq in frequencies){
 VAL=data[data$F == fq, ]
 mod <- lm(VAL$L~VAL$N+I(VAL$N^2), data=VAL)
@@ -57,14 +61,18 @@ print(summary(mod))
 
 Lest2N<-function(N){mod$coefficients[1]  + mod$coefficients[2] * N +   mod$coefficients[3] * N^2}
 
-lines(n, Lest2N(n), col="red")
-
+lines(n, Lest2N(n), col=colrF[i])
+i<-i+1
 }
 
+i<-0
 plot.new( )
 plot.window( xlim=c(10,100), ylim=c(0,max(data$L)))
 axis( side=1)
 axis( side=2, seq(0, 4000, by=200))
+title(main="Inductance vs F")
+legend(10, 1600, legend=c("N=60", "N=80", "N=100", "N=120"),
+       col=c("red", "blue", "green", "magenta"), lty=rep(1,4))
 
 for(n in nTypes){
   VAL=data[data$N == n, ]
@@ -73,7 +81,8 @@ for(n in nTypes){
  
   Lest2F<-function(F){mod$coefficients[1]  + mod$coefficients[2] * F +   mod$coefficients[3] * F^2}
   
-  lines(f, Lest2F(f), col="blue")
+  lines(f, Lest2F(f), col=colrN[i])
+  i<-i+1
   
 }
 
@@ -82,6 +91,12 @@ plot.new( )
 plot.window( xlim=c(10,100), ylim=c(0,max(data$R)))
 axis( side=1)
 axis( side=2, seq(0, 4000, by=200))
+title(main="Résistance vs F")
+legend(20, 400, legend=c("F=10", "F=20", "F=28.5", "F=40","F=50", "F=66.6", "F=100"),
+       col=c("red", "blue", "green", "magenta", "orange", "cyan", "gray"), lty=rep(1,7))
+
+
+i<-0
 
 for(n in nTypes){
   VAL=data[data$N == n, ]
@@ -90,17 +105,22 @@ for(n in nTypes){
   
   Rest2F<-function(F){mod$coefficients[1]  + mod$coefficients[2] * F +   mod$coefficients[3] * F^2}
   
-  lines(f, Rest2F(f), col="green")
-  
+  lines(f, Rest2F(f), col=colrF[i])
+  i<-i+1
 }
+
 
 n<-seq(60, 120, by=1)
 plot.new( )
 plot.window( xlim=c(60,120), ylim=c(0,max(data$R)))
 axis( side=1)
 axis( side=2, seq(0, 500, by=50))
+title(main="Résistance vs N")
+legend(60, 400, legend=c("N=60", "N=80", "N=100", "N=120"),
+       col=c("red", "blue", "green", "magenta"), lty=rep(1,4))
 
 
+i<-0
 for(fq in frequencies){
   VAL=data[data$F == fq, ]
   mod <- lm(VAL$R~VAL$N+I(VAL$N^2), data=VAL)
@@ -108,7 +128,8 @@ for(fq in frequencies){
   
   Rest2N<-function(N){mod$coefficients[1]  + mod$coefficients[2] * N +   mod$coefficients[3] * N^2}
   
-  lines(n, Rest2N(n), col="orange")
+  lines(n, Rest2N(n), col=colrN[i])
+  i<-i+1
   
 }
 
