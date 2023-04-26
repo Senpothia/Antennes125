@@ -43,12 +43,15 @@ R<-round(modR2(F,N, 1500) + (rnorm(84)+1)*2 , 2)
 
 data<-data.frame(echs, N, F, R, L)
 
+#---------------------------------------------------------------------------------------------------------
+# GRAPHE 1: Inductance vs N
 
-plot.new( )
-plot.window( xlim=c(60,120), ylim=c(0,max(data$L)))
+
+plot.new()
+plot.window( xlim=c(60,120), ylim=c(0,max(data$L)+100))
 axis( side=1)
 axis( side=2, seq(0, 4000, by=80))
-title(main="Inductance vs N")
+title(main="1: Inductance vs N")
 legend(60, 1840, legend=c("F=10", "F=20", "F=28.5", "F=40","F=50", "F=66.6", "F=100"),
        col=c("red", "blue", "green", "magenta", "orange", "cyan", "gray"), lty=rep(1,7))
 
@@ -65,12 +68,17 @@ lines(n, Lest2N(n), col=colrF[i])
 i<-i+1
 }
 
+#---------------------------------------------------------------------------------------------------------
+# GRAPHE 2: Inductance vs F
+
+n<-seq(60, 120, by=1)
+f<-seq(10, 100, by=1)
 i<-0
 plot.new( )
 plot.window( xlim=c(10,100), ylim=c(0,max(data$L)))
 axis( side=1)
 axis( side=2, seq(0, 4000, by=200))
-title(main="Inductance vs F")
+title(main="2: Inductance vs F")
 legend(10, 1600, legend=c("N=60", "N=80", "N=100", "N=120"),
        col=c("red", "blue", "green", "magenta"), lty=rep(1,4))
 
@@ -86,12 +94,16 @@ for(n in nTypes){
   
 }
 
+#---------------------------------------------------------------------------------------------------------
+# GRAPHE 3: Résistance vs F
+
 n<-seq(60, 120, by=1)
+f<-seq(10, 100, by=1)
 plot.new( )
 plot.window( xlim=c(10,100), ylim=c(0,max(data$R)))
 axis( side=1)
 axis( side=2, seq(0, 4000, by=200))
-title(main="Résistance vs F")
+title(main="3: Résistance vs F")
 legend(20, 400, legend=c("F=10", "F=20", "F=28.5", "F=40","F=50", "F=66.6", "F=100"),
        col=c("red", "blue", "green", "magenta", "orange", "cyan", "gray"), lty=rep(1,7))
 
@@ -109,13 +121,16 @@ for(n in nTypes){
   i<-i+1
 }
 
+#---------------------------------------------------------------------------------------------------------
+# GRAPHE 4: Résistance vs N
 
 n<-seq(60, 120, by=1)
+f<-seq(10, 100, by=1)
 plot.new( )
 plot.window( xlim=c(60,120), ylim=c(0,max(data$R)))
 axis( side=1)
 axis( side=2, seq(0, 500, by=50))
-title(main="Résistance vs N")
+title(main="4: Résistance vs N")
 legend(60, 400, legend=c("N=60", "N=80", "N=100", "N=120"),
        col=c("red", "blue", "green", "magenta"), lty=rep(1,4))
 
