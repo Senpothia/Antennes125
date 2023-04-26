@@ -5,7 +5,7 @@
 
 
 modR2<-function(F, N, facteur) {
-  y<-(0.1*N^2-10) * F^2 + (0.002*N^2+0.2*N-1) *F  + (-8.5*N^2 +52*N + 42)
+  y<-(0.1*N^2-10) * F^2 + (0.002*N^2+0.2*N-1) *F  + (-8.5*N^2 +52*N + 48)
   return(y/facteurR)
 }
 
@@ -147,4 +147,10 @@ for(fq in frequencies){
   i<-i+1
   
 }
+
+# Enregistrement des données
+
+write.csv(data,"./data/data.csv", row.names = FALSE)
+
+
 
