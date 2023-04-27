@@ -14,6 +14,10 @@ getMeasures<-function(file, s=";", d=","){
   
 }
 
+# Fourni la liste de toutes les listes de modèles RN, LN, RF, LF
+# liste de liste
+# RN, LN... sont des listes
+# Accès à une liste: MODS["MODSLF"] avec MODS la liste des modèles issue de getModels()
 
 getModels<-function(TAB){
   
@@ -105,7 +109,12 @@ getModels<-function(TAB){
   
 }
 
-estimateurs<-function(models, groupe){  # ex appel: M<-getModels(TAB)
+# Fourni la liste des fonctions de régression d'un groupe pour un ensemble de modèles
+# models possède 4 groupes:LN, RN, LF, RF
+# l'appel se fait sur un groupe: LN, RN, LF, RF
+
+estimateurs<-function(models, groupe){  # ex appel: 
+                                        #           M<-getModels(TAB)
                                         #           estimateurs(M, "LN")
   
   EST<-list()
@@ -154,8 +163,12 @@ estimateurs<-function(models, groupe){  # ex appel: M<-getModels(TAB)
   
 }
 
-modparams<-function(models, groupe){  # ex appel: M<-getModels(TAB)
-                                      #           estimateurs(M, "LN")
+# Obtention listes des paramètres de modèles pour un groupe: RN, LN, LF, RF 
+# contenu dans un ensemble désigné par models
+
+getModparams<-function(models, groupe){  # ex appel:
+                                      #           M<-getModels(TAB)
+                                      #           getModparams(M, "LN")
   
   PAR<-list()
   
@@ -184,12 +197,18 @@ modparams<-function(models, groupe){  # ex appel: M<-getModels(TAB)
     
   }
   
+  #MODS[["MODSLF"]][1]
+  # |       |       |
+  # liste   liste   |
+  #         interne |
+  #                 indice dans la liste interne        
+  
   i<-1
   for(m in models[[gr]]){
     mods<-list()
     for(j in 1:3){
       
-      mods[[j]]<-m$coefficients[j]
+      mods[j]<-m$coefficients[j]
       
       
     }
@@ -199,8 +218,81 @@ modparams<-function(models, groupe){  # ex appel: M<-getModels(TAB)
    
   }
   
+ 
   return(PAR)
   
+  
+}
+
+# Tri des paramètres
+
+# étapes pour l'appel:
+# > TAB<-getMeasures("data", ",", ".")
+# > MODS<-getModels(TAB)
+# > models<-getModparams(MODS, "RF")
+
+# models: liste de modèles: RN, LN, LF, RF
+# fourni pour l'ensemble d'une liste de modèles les coeffients triés par dégré
+# dégré 0, 1, 2 du polynôme de dégré 2
+
+getParams<-function(models){  #mod
+  
+  PARAMS<-list()
+  D0<-list()
+  D1<-list()
+  D2<-list()
+  
+  i<-1
+  for(m in models){ 
+  
+      D0[[i]]<-m$coefficients[1]
+      D1[[i]]<-m$coefficients[2]
+      D2[[i]]<-m$coefficients[3]
+      i<-i+1
+
+    
+  }
+  PARAMS[[1]]<-D0
+  PARAMS[[2]]<-D1
+  PARAMS[[3]]<-D2
+  
+  names(PARAMS)<-c("D0", "D1", "D2")
+  return(PARAMS)
+  
+  
+}
+
+# Conversion de la liste de pramètres en une matrice de paramètres listés en colonnes
+# coef: liste issue de getParams()
+
+getMatParams<-function(coef){
+  
+  MAT <- matrix(unlist(coef), ncol = 3, byrow = FALSE)
+  return(MAT)
+  
+}
+
+#---------------  SCRIPT    ----------------------------------------------------------
+
+recherche<-function(){
+  
+  TAB<-getMeasures("data", ",", ".")
+  MODS<-getModels(TAB)
+  paramsLF<-getModparams(MODS, "LF")
+  matLF<-getMatParams(paramsLF)
+  
+  paramsRF<-getModparams(MODS, "RF")
+  matRF<-getMatParams(paramsRF)
+  
+  paramsLN<-getModparams(MODS, "LN")
+  matLN<-getMatParams(paramsLN)
+  
+  paramsRN<-getModparams(MODS, "RN")
+  matRN<-getMatParams(paramsRN)
+  
+  COEFS<-list(matLF, matLN, matRF, matRN)
+  names(COEFS)<-c("LF", "LN", "RF", "RN")
+  return(COEFS)
   
 }
 
@@ -317,5 +409,15 @@ genLF<-function(a, b, c, r){
 #echs<-nrow(table(TAB$ech)) # Nbre d'échantillons
 #attributes(table(TAB$F)) # voir les attibuts d'un objet  
 #v<-attributes(table(TAB$F))[2] #liste des fréquences - ne pas utiliser
+
+# liste du nom des éléments contenus dans la liste
+# names(MODS)
+
+# Elément nommé MODSLF de la liste MODS
+# MODS[["MODSLF"]]
+
+# Conversion list->matrice
+#Matrix_x <- matrix(unlist(coef), ncol = 3, byrow = FALSE)
+
 
 #--------------------------------------------------------------------
