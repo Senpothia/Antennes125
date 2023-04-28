@@ -4,13 +4,13 @@
 # Définition des modèles
 
 
-modR2<-function(F, N, facteur) {
+modR2<-function(F, N) {
   y<-(0.1*N^2-10) * F^2 + (0.002*N^2+0.2*N-1) *F  + (-8.5*N^2 +52*N + 48)
   return(y/facteurR)
 }
 
 
-modL2<-function(F, N, facteur) {
+modL2<-function(F, N) {
   y<-(0.5*N^2-10) * F^2 + (22*N^2+0.2*N-1) *F  + (-10*N^2 +52*N + 10)
   return(y/facteurL)
 }
@@ -21,79 +21,117 @@ modL2<-function(F, N, facteur) {
 
 # Modèle pour R vs F - F est la variable du modèle, N est le paramètre des courbes
 
-arn<-function(N){
+crf<-function(N){
   
-  -8.5*N^2 +52*N + 48
+  c<-(-8.5*N^2 +52*N + 48)
+  return(c)
 }
 
 
-brn<-function(N){
+brf<-function(N){
   
-  0.002*N^2+0.2*N-1
+  b<-0.002*N^2+0.2*N-1
+  return(b)
+  
 }
   
-crn<-function(N){
+arf<-function(N){
   
-  0.5*N^2-10
+  a<-0.1*N^2-10
+  return(a)
   
 }  
   
 # Modèle pour L vs F - F est la variable du modèle, N est le paramètre des courbes
 
 
-aln<-function(N){
+clf<-function(N){
   
-  -10*N^2 +52*N + 10
+  c<-(-10*N^2 +52*N + 10)
+  return(c)
 }
 
 
-bln<-function(N){
+blf<-function(N){
   
-  22*N^2+0.2*N-1
+  b<-22*N^2+0.2*N-1
+  return(b)
 }
 
-cln<-function(N){
+alf<-function(N){
   
-  0.5*N^2-10
+  a<-0.5*N^2-10
+  return(a)
   
 }  
 
 # Modèle pour R vs N - N est la variable du modèle, F est le paramètre des courbes
 
-arf<-function(F){
+crn<-function(F){
   
-  0.1*F^2+0.002-0.8
+  c<-(-10*F^2-F+48)
+  return(c)
+  
 }
 
 
-brf<-function(F){
+brn<-function(F){
   
-  0.2*F+52
+  b<-0.2*F+52
+  return(b)
 }
 
-crf<-function(F){
+arn<-function(F){
   
-  -10*F^2-F+48
+  a<-(0.1*F^2+0.002-0.8)
+  return(a)
   
 }  
 
 # Modèle pour L vs N - N est la variable du modèle, F est le paramètre des courbes
 
-alf<-function(F){
+cln<-function(F){
   
-  0.5*F^2+22*F-10
+  c<-(-10*F^2-F+0)
+  return(c)
 }
 
 
-blf<-function(F){
+bln<-function(F){
   
-  0.2*F+52
+  b<-0.2*F+52
+  return(b)
 }
 
-clf<-function(F){
+aln<-function(F){
   
-  -10*F^2-F+10
+  a<-(0.5*F^2+22*F-10)
+  return(a)
   
+}
+
+# modélisation 3
+
+modR3pNRF<-function(F, N) { #RF
+  y<- arf(N) * F^2 + brf(N) *F  + crf(N)
+  return(y/facteurR)
+}
+
+
+modL3pNLF<-function(F, N) { # LF
+  y<-alf(N) * F^2 + blf(N) *F  + clf(N)
+  return(y/facteurL)
+}
+
+modR3pFRN<-function(F, N) { #RN
+  y<- arn(F) * N^2 + brn(F) *N  + crn(F)
+  return(y/facteurR)
+}
+
+
+modL3pFLN<-function(F, N) {  #LN
+  y<-aln(F) * N^2 + bln(F) *N  + cln(F)
+  return(y/facteurL)
 }
   
 # Déclarations de variables
@@ -119,8 +157,8 @@ f<-seq(10, 100, by=1)
 # Génération des résistances et inductances
 
 
-L<-round(modL2(F,N, 1500) + (rnorm(84)+1)*2 , 2)
-R<-round(modR2(F,N, 1500) + (rnorm(84)+1)*2 , 2)
+L<-round(modL2(F,N) + (rnorm(84)+1)*2 , 2)
+R<-round(modR2(F,N) + (rnorm(84)+1)*2 , 2)
 
 data<-data.frame(echs, N, F, R, L)
 
@@ -237,13 +275,13 @@ getParmsAth<-function(){
   
   l<-list()
   
-  palf<-alf(frequencies)/facteurL
+  palf<-alf(nTypes)
   l[[1]]<-palf
-  paln<-aln(nTypes)/facteurL
+  paln<-aln(frequencies)
   l[[2]]<-paln
-  parf<-arf(frequencies)/facteurR
+  parf<-arf(nTypes)
   l[[3]]<-parf
-  parn<-arn(nTypes)/facteurR
+  parn<-arn(frequencies)
   l[[4]]<-parn
   names(l)<-c("ALF", "ALN", "ARF", "ARN")
   return(l)
@@ -254,13 +292,13 @@ getParmsBth<-function(){
   
   l<-list()
   
-  pblf<-blf(frequencies)/facteurL
+  pblf<-blf(nTypes)
   l[[1]]<-pblf
-  pbln<-bln(nTypes)/facteurL
+  pbln<-bln(frequencies)
   l[[2]]<-pbln
-  pbrf<-brf(frequencies)/facteurR
+  pbrf<-brf(nTypes)
   l[[3]]<-pbrf
-  pbrn<-brn(nTypes)/facteurR
+  pbrn<-brn(frequencies)
   l[[4]]<-pbrn
   names(l)<-c("BLF", "BLN", "BRF", "BRN")
   return(l)
@@ -271,20 +309,21 @@ getParmsCth<-function(){
   
   l<-list()
   
-  pclf<-clf(frequencies)/facteurL
+  pclf<-clf(nTypes)
   l[[1]]<-pclf
-  pcln<-cln(nTypes)/facteurL
+  pcln<-cln(frequencies)
   l[[2]]<-pcln
-  pcrf<-crf(frequencies)/facteurR
+  pcrf<-crf(nTypes)
   l[[3]]<-pcrf
-  pcrn<-crn(nTypes)/facteurR
+  pcrn<-crn(frequencies)
   l[[4]]<-pcrn
   names(l)<-c("CLF", "CLN", "CRF", "CRN")
   return(l)
+ 
   
 }
 
-COEFth<-list(Ath=getParmsAth(), Bth=getParmsBth(), Cth=getParmsCth())
+COEFth<-list(Cth=getParmsCth(), Bth=getParmsBth(), Ath=getParmsAth())
 
 
 

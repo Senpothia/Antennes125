@@ -259,8 +259,8 @@ getParams<-function(models){  #mod
   
 }
 
-# Conversion de la liste de paramètres en une matrice de paramètres listés en colonnes
-# coef: liste issue de getParams(): RN, LN, RF, LF
+# Conversion de la liste de paramètres d'un groupe en une matrice de paramètres listés en colonnes
+# coef: liste issue de getParams()pour un des groupes: RN, LN, RF, LF
 
 getMatParams<-function(coef){
   
@@ -295,6 +295,7 @@ paraModsRegs<-function(matrice, abscisse){
 }
 
 #---------------   SCRIPT    ----------------------------------------------------------
+# Retourne une liste de toutes les matrices de coefficients de groupes: RN, RF, LN, LF
 
 recherche<-function(){
   
