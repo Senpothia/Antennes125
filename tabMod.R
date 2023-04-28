@@ -52,7 +52,7 @@ getModels<-function(TAB){
   for(i in frequencies){
     
     
-    VAL=TAB[TAB$F == i,]
+    VAL<-TAB[TAB$F == i,]
     modL <- lm(VAL$L~VAL$N+I(VAL$N^2), data=VAL)
     MODSLN[[j]]<-modL
     j<-j+1
@@ -66,7 +66,7 @@ getModels<-function(TAB){
   for(i in frequencies){
     
     
-    VAL=TAB[TAB$F == i,]
+    VAL<-TAB[TAB$F == i,]
     modR <- lm(VAL$R~VAL$N+I(VAL$N^2), data=VAL)
     MODSRN[[j]]<-modR
     j<-j+1
@@ -81,7 +81,7 @@ getModels<-function(TAB){
   for(i in nTypes){
     
     
-    VAL=TAB[TAB$N == i,]
+    VAL<-TAB[TAB$N == i,]
     modL <- lm(VAL$L~VAL$F+I(VAL$F^2), data=VAL)
     MODSLF[[j]]<-modL
     j<-j+1
@@ -96,7 +96,7 @@ getModels<-function(TAB){
   for(i in nTypes){
     
     
-    VAL=TAB[TAB$N == i,]
+    VAL<-TAB[TAB$N == i,]
     modR <- lm(VAL$R~VAL$F+I(VAL$F^2), data=VAL)
     MODSRF[[j]]<-modR
     j<-j+1
@@ -158,9 +158,6 @@ estimateurs<-function(models, groupe){  # ex appel:
   
   return(EST)
   
-  #return(models[[gr]])
-  
-  
 }
 
 # Obtention listes des paramètres de modèles pour un groupe: RN, LN, LF, RF 
@@ -179,7 +176,7 @@ getModparams<-function(models, groupe){  # ex appel:
     
     gr<-"MODSLN"
   }
-  
+  P
   if(groupe == "RN"){
     
     gr<-"MODSRN"
@@ -231,9 +228,9 @@ getModparams<-function(models, groupe){  # ex appel:
 # > MODS<-getModels(TAB)
 # > models<-getModparams(MODS, "RF")
 
-# models: liste de modèles: RN, LN, LF, RF
-# fourni pour l'ensemble d'une liste de modèles les coeffients triés par dégré
-# dégré 0, 1, 2 du polynôme de dégré 2
+# models: liste de modèles: RN, LN, LF ou RF
+# fourni pour l'ensemble d'une liste de modèles les coefficients triés par dégré
+# dégré: 0, 1, 2 du polynôme de dégré 2
 
 getParams<-function(models){  #mod
   
@@ -262,8 +259,8 @@ getParams<-function(models){  #mod
   
 }
 
-# Conversion de la liste de pramètres en une matrice de paramètres listés en colonnes
-# coef: liste issue de getParams()
+# Conversion de la liste de paramètres en une matrice de paramètres listés en colonnes
+# coef: liste issue de getParams(): RN, LN, RF, LF
 
 getMatParams<-function(coef){
   
@@ -272,11 +269,39 @@ getMatParams<-function(coef){
   
 }
 
-#---------------  SCRIPT    ----------------------------------------------------------
+# Déduit les modèles sur les paramètres à partir d'une matrice de paramètres
+# matrice: matrice issue d'un groupe RN, RL, LN, ou LF via getMatParams()
+# abscisse: vecteur des valeurs de fréquences F ou de nbre de spires N qui ont servis aux mesures
+# abscisse est le paramètre du réseau de courbes étudié: F pour RN, LN; N pour RF, LF
+
+paraModsRegs<-function(matrice, abscisse){
+  
+  l<-list()
+  
+  for(i in 1:3){
+    
+    v<-vector()
+    coefs<-matrice[,i]
+    m <- lm(coefs~abscisse+I(abscisse^2), data=data.frame(coefs,abscisse))
+    v[1]<-m$coefficients[1]
+    v[2]<-m$coefficients[2]
+    v[3]<-m$coefficients[3]
+    l[[i]]<-v
+    
+  }
+  
+  MAT <- matrix(unlist(l), ncol = 3, byrow = FALSE)
+  
+}
+
+#---------------   SCRIPT    ----------------------------------------------------------
 
 recherche<-function(){
   
   TAB<-getMeasures("data", ",", ".")
+  N<-sort(unique(TAB$N))
+  F<-sort(unique(TAB$F))
+  
   MODS<-getModels(TAB)
   paramsLF<-getModparams(MODS, "LF")
   matLF<-getMatParams(paramsLF)
@@ -298,126 +323,3 @@ recherche<-function(){
 
 
 
-# --------------  TESTS DIVERS  ------------------------------------------------------
-
-n<-c(1, 2, 3)
-i<-1
-f1s<-paste("MODS[[1]]$coefficients[", as.character(n[i]), "] + MODS[[1]]$coefficients[", as.character(n[i+1]), "]*N+ MODS[[1]]$coefficients[", as.character(n[i+2]),"]*N^2")
-
-f<-function(N){  # Fonctonnel. Appel: f(2)
-  
-  fonction<-parse(text="N+2")
-  func=eval(fonction)
-  return(func)
-  
-}
-
-
-f2<-function(N){        # Fonctionnel. Appel:  f2(10). f1s est une expression en string
-                        # f1s <- "MODS[[1]]$coefficients[ 1 ] + MODS[[1]]$coefficients[ 2 ]*N+ MODS[[1]]$coefficients[ 3 ]*N^2"
-  
-  fonction<-parse(text=f1s)
-  y<-eval(fonction)
-  return (y)
-
-
-}
-
-op <- function(N, func) {  # Fonctionnel. Appel: op(60, f1s) f1s est une expression en string
-                           # f1s <- "MODS[[1]]$coefficients[ 1 ] + MODS[[1]]$coefficients[ 2 ]*N+ MODS[[1]]$coefficients[ 3 ]*N^2"
-  
-  fonction<-parse(text=func)
-  y<-eval(fonction)
-  return (y)
-  
-}
-
-# estimateur<-function(i, N){  # Exemple d'appel: estimateur(1, 80)
-#     
-#     #f1s<-paste("MODS[[1]]$coefficients[", as.character(n[i]), "] + MODS[[1]]$coefficients[", as.character(n[i+1]), "]*N+ MODS[[1]]$coefficients[", as.character(n[i+2]),"]*N^2")
-#     #print(f1s)
-#     return(MODS[[i]]$coefficients[1] + MODS[[i]]$coefficients[2]*N + MODS[[i]]$coefficients[3]*N^2)
-#     
-# }
-
-estimByN<-function(i, N, groupe){ # Exemple d'appel: estimateur2(1, 80, "MODSR")
-  
-  MDS<-parse(text=groupe)
-  MDLS<-eval(MDS)
-  return(MDLS[[i]]$coefficients[1] + MDLS[[i]]$coefficients[2]*N + MDLS[[i]]$coefficients[3]*N^2)
-  
-}
-
-estimByF<-function(i, F, groupe){ # Exemple d'appel: estimateur2(1, 80, "MODSR")
-  
-  MDS<-parse(text=groupe)
-  MDLS<-eval(MDS)
-  return(MDLS[[i]]$coefficients[1] + MDLS[[i]]$coefficients[2]*F + MDLS[[i]]$coefficients[3]*F^2)
-  
-}
-
-
-#---------------------------------------------------------------------------------------------------
-
-#  FONCTIONS DE GENERATION DE DONNEES
-
-genRF<-function(a, b, c, r){
-  
-  x<-c(10,20,28.5,40,50,66.6,100)
-  e<-rnorm(7)*4
-  print(e)
-  y = (a + b*x + c*x^2 + e)/r
-  return(y)
-    
-}
-
-genLF<-function(a, b, c, r){
-  
-  x<-c(10,20,28.5,40,50,66.6,100)
-  e<-rnorm(7)*4
-  print(e)
-  y = (a + b*x + c*x^2 + e)/r
-  return(y)
-  
-}
-
-# ----------------    Exemples Fonctionnels    -------------------------------
-
-
-# > N<-3
-#
-# > eval(parse(text="N+5"))
-# [1] 7
-# > eval(parse(text=f1s))
-# (Intercept) 
-# 0.1588809 
-
-# ex 2--------------
-# N<-3
-#> func<-f1s
-# > func
-# [1] "MODS[[1]]$coefficients[ 1 ] + MODS[[1]]$coefficients[ 2 ]*N+ MODS[[1]]$coefficients[ 3 ]*N^2"
-# > fonction<-parse(text=func)
-# > fonction
-# expression(MODS[[1]]$coefficients[ 1 ] + MODS[[1]]$coefficients[ 2 ]*N+ MODS[[1]]$coefficients[ 3 ]*N^2)
-# > eval(fonction)
-# (Intercept) 
-# 0.1530908 
-
-
-#frqs<-nrow(table(TAB$F)) # Nbre de fréquence de mesures
-#echs<-nrow(table(TAB$ech)) # Nbre d'échantillons
-#attributes(table(TAB$F)) # voir les attibuts d'un objet  
-#v<-attributes(table(TAB$F))[2] #liste des fréquences - ne pas utiliser
-
-# liste du nom des éléments contenus dans la liste
-# names(MODS)
-
-# Elément nommé MODSLF de la liste MODS
-# MODS[["MODSLF"]]
-
-# Conversion list->matrice
-#Matrix_x <- matrix(unlist(coef), ncol = 3, byrow = FALSE)
-
-
-#--------------------------------------------------------------------

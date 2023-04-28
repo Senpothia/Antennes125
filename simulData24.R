@@ -15,6 +15,87 @@ modL2<-function(F, N, facteur) {
   return(y/facteurL)
 }
 
+# Définition des coefficients réels à prévoir dans la suite de l'étude par des régression linéaires
+
+# y<- c + bx + ax^2 : forme générale des coefficients
+
+# Modèle pour R vs F - F est la variable du modèle, N est le paramètre des courbes
+
+arn<-function(N){
+  
+  -8.5*N^2 +52*N + 48
+}
+
+
+brn<-function(N){
+  
+  0.002*N^2+0.2*N-1
+}
+  
+crn<-function(N){
+  
+  0.5*N^2-10
+  
+}  
+  
+# Modèle pour L vs F - F est la variable du modèle, N est le paramètre des courbes
+
+
+aln<-function(N){
+  
+  -10*N^2 +52*N + 10
+}
+
+
+bln<-function(N){
+  
+  22*N^2+0.2*N-1
+}
+
+cln<-function(N){
+  
+  0.5*N^2-10
+  
+}  
+
+# Modèle pour R vs N - N est la variable du modèle, F est le paramètre des courbes
+
+arf<-function(F){
+  
+  0.1*F^2+0.002-0.8
+}
+
+
+brf<-function(F){
+  
+  0.2*F+52
+}
+
+crf<-function(F){
+  
+  -10*F^2-F+48
+  
+}  
+
+# Modèle pour L vs N - N est la variable du modèle, F est le paramètre des courbes
+
+alf<-function(F){
+  
+  0.5*F^2+22*F-10
+}
+
+
+blf<-function(F){
+  
+  0.2*F+52
+}
+
+clf<-function(F){
+  
+  -10*F^2-F+10
+  
+}
+  
 # Déclarations de variables
 
 
@@ -151,6 +232,61 @@ for(fq in frequencies){
 # Enregistrement des données
 
 write.csv(data,"./data/data.csv", row.names = FALSE)
+
+getParmsAth<-function(){
+  
+  l<-list()
+  
+  palf<-alf(frequencies)
+  l[[1]]<-palf
+  paln<-aln(nTypes)
+  l[[2]]<-paln
+  parf<-arf(frequencies)
+  l[[3]]<-parf
+  parn<-arn(nTypes)
+  l[[4]]<-parn
+  names(l)<-c("ALF", "ALN", "ARF", "ARN")
+  return(l)
+    
+}
+
+getParmsBth<-function(){
+  
+  l<-list()
+  
+  pblf<-blf(frequencies)
+  l[[1]]<-pblf
+  pbln<-bln(nTypes)
+  l[[2]]<-pbln
+  pbrf<-brf(frequencies)
+  l[[3]]<-pbrf
+  pbrn<-brn(nTypes)
+  l[[4]]<-pbrn
+  names(l)<-c("BLF", "BLN", "BRF", "BRN")
+  return(l)
+  
+}
+
+getParmsCth<-function(){
+  
+  l<-list()
+  
+  pclf<-clf(frequencies)
+  l[[1]]<-pclf
+  pcln<-cln(nTypes)
+  l[[2]]<-pcln
+  pcrf<-crf(frequencies)
+  l[[3]]<-pcrf
+  pcrn<-crn(nTypes)
+  l[[4]]<-pcrn
+  names(l)<-c("CLF", "CLN", "CRF", "CRN")
+  return(l)
+  
+}
+
+COEFth<-list(Ath=getParmsAth(), Bth=getParmsBth(), Cth=getParmsCth())
+
+
 
 
 
