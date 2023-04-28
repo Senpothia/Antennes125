@@ -83,7 +83,7 @@ brn<-function(F){
 
 arn<-function(F){
   
-  a<-(0.1*F^2+0.002-0.8)
+  a<-(0.1*F^2+0.002*F-8.5)
   return(a)
   
 }  
@@ -275,13 +275,13 @@ getParmsAth<-function(){
   
   l<-list()
   
-  palf<-alf(nTypes)
+  palf<-alf(nTypes)/facteurL
   l[[1]]<-palf
-  paln<-aln(frequencies)
+  paln<-aln(frequencies)/facteurL
   l[[2]]<-paln
-  parf<-arf(nTypes)
+  parf<-arf(nTypes)/facteurR
   l[[3]]<-parf
-  parn<-arn(frequencies)
+  parn<-arn(frequencies)/facteurR
   l[[4]]<-parn
   names(l)<-c("ALF", "ALN", "ARF", "ARN")
   return(l)
@@ -292,13 +292,13 @@ getParmsBth<-function(){
   
   l<-list()
   
-  pblf<-blf(nTypes)
+  pblf<-blf(nTypes)/facteurL
   l[[1]]<-pblf
-  pbln<-bln(frequencies)
+  pbln<-bln(frequencies)/facteurL
   l[[2]]<-pbln
-  pbrf<-brf(nTypes)
+  pbrf<-brf(nTypes)/facteurR
   l[[3]]<-pbrf
-  pbrn<-brn(frequencies)
+  pbrn<-brn(frequencies)/facteurR
   l[[4]]<-pbrn
   names(l)<-c("BLF", "BLN", "BRF", "BRN")
   return(l)
@@ -309,13 +309,13 @@ getParmsCth<-function(){
   
   l<-list()
   
-  pclf<-clf(nTypes)
+  pclf<-clf(nTypes)/facteurL
   l[[1]]<-pclf
-  pcln<-cln(frequencies)
+  pcln<-cln(frequencies)/facteurL
   l[[2]]<-pcln
-  pcrf<-crf(nTypes)
+  pcrf<-crf(nTypes)/facteurR
   l[[3]]<-pcrf
-  pcrn<-crn(frequencies)
+  pcrn<-crn(frequencies)/facteurR
   l[[4]]<-pcrn
   names(l)<-c("CLF", "CLN", "CRF", "CRN")
   return(l)
@@ -326,6 +326,8 @@ getParmsCth<-function(){
 COEFth<-list(Cth=getParmsCth(), Bth=getParmsBth(), Ath=getParmsAth())
 
 
-
-
+# L31<-modL3pNLF(F,N)
+# L32<-modL3pFLF(F,N)
+# R31<-modR3pFRN(F,N)
+# L32<-modR3pNRF(F,N)
 
