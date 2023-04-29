@@ -1,5 +1,6 @@
 #Test tableau de modèles
 
+#Chargement des données
 #TAB<-read.table("./data/mesures.csv",header=TRUE,sep=";",dec=",")
 #TAB<-read.table("./data/data.csv",header=TRUE,sep=",",dec=".")
 
@@ -46,7 +47,7 @@ getModels<-function(TAB){
   
   #---------------------    Courbes paramétrées par F      ------------------------------
   
-  # Inductance vs N paramétrée en F
+  # LN: Inductance vs N paramétrée en F
   j<-1
   
   for(i in frequencies){
@@ -58,8 +59,9 @@ getModels<-function(TAB){
     j<-j+1
     
   }
+  names(MODSLN)<-c("F=10", "F=20", "F=28.5", "F=40", "F=50", "F=66.6", "F=100")
   
-  # Résistance vs N paramétrée en F
+  # RN: Résistance vs N paramétrée en F
   
   j<-1
   
@@ -73,8 +75,9 @@ getModels<-function(TAB){
     
   }
   
+  names(MODSRN)<-c("F=10", "F=20", "F=28.5", "F=40", "F=50", "F=66.6", "F=100")
   # ---------------    Courbes paramétrées par N   -------------------------------
-  # Inductance vs F paramétrée en N
+  # LF: Inductance vs F paramétrée en N
   
   j<-1
   
@@ -88,8 +91,9 @@ getModels<-function(TAB){
     
   }
   
+  names(MODSLF)<-c("N=60", "N=80", "N=100", "N=120")
   
-  # Résistance vs F paramétrée en N
+  # RF: Résistance vs F paramétrée en N
   
   j<-1
   
@@ -102,6 +106,7 @@ getModels<-function(TAB){
     j<-j+1
     
   }
+  names(MODSRF)<-c("N=60", "N=80", "N=100", "N=120")
   
   MODS<-list(MODSLF, MODSRF, MODSLN, MODSRN)
   names(MODS)<-c("MODSLF", "MODSRF", "MODSLN", "MODSRN")
@@ -298,24 +303,31 @@ paraModsRegs<-function(matrice, abscisse){
 # Retourne une liste de toutes les matrices de coefficients de groupes: RN, RF, LN, LF
 
 recherche<-function(){
-  
+  nomCoefs<-c("D0" , "D1", "D3")
   TAB<-getMeasures("data", ",", ".")
   N<-sort(unique(TAB$N))
   F<-sort(unique(TAB$F))
   
   MODS<-getModels(TAB)
+  
   paramsLF<-getModparams(MODS, "LF")
   matLF<-getMatParams(paramsLF)
+  dimnames(matLF) <- list(nTypes,nomCoefs )
   
   paramsRF<-getModparams(MODS, "RF")
   matRF<-getMatParams(paramsRF)
+  dimnames(matRF) <- list(nTypes, nomCoefs)
   
   paramsLN<-getModparams(MODS, "LN")
   matLN<-getMatParams(paramsLN)
+  dimnames(matLN) <- list(frequencies, nomCoefs)
   
   paramsRN<-getModparams(MODS, "RN")
   matRN<-getMatParams(paramsRN)
+  dimnames(matRN) <- list(frequencies, nomCoefs)
   
+  # liste de matrices contenant les coefficients des modèles de régression
+  print("----  LISTE DES COEFFICIENTS REELS   ------")
   COEFS<-list(matLF, matLN, matRF, matRN)
   names(COEFS)<-c("LF", "LN", "RF", "RN")
   return(COEFS)

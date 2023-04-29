@@ -156,9 +156,10 @@ f<-seq(10, 100, by=1)
 
 # Génération des résistances et inductances
 
-
-L<-round(modL2(F,N) + (rnorm(84)+1)*2 , 2)
-R<-round(modR2(F,N) + (rnorm(84)+1)*2 , 2)
+#bruit<- (rnorm(84)+1)*2
+bruit<-0
+L<-round(modL2(F,N) + bruit, 2)
+R<-round(modR2(F,N) + bruit, 2)
 
 data<-data.frame(echs, N, F, R, L)
 
@@ -179,6 +180,8 @@ i<-0
 for(fq in frequencies){
 VAL=data[data$F == fq, ]
 mod <- lm(VAL$L~VAL$N+I(VAL$N^2), data=VAL)
+print("------------------------------------------------------------------------------------------------")
+print(paste("F=", as.character(fq)))
 print(summary(mod))
 
 Lest2N<-function(N){mod$coefficients[1]  + mod$coefficients[2] * N +   mod$coefficients[3] * N^2}
@@ -204,6 +207,8 @@ legend(10, 1600, legend=c("N=60", "N=80", "N=100", "N=120"),
 for(n in nTypes){
   VAL=data[data$N == n, ]
   mod <- lm(VAL$L~VAL$F+I(VAL$F^2), data=VAL)
+  print("------------------------------------------------------------------------------------------------")
+  print(paste("N=", as.character(n)))
   print(summary(mod))
  
   Lest2F<-function(F){mod$coefficients[1]  + mod$coefficients[2] * F +   mod$coefficients[3] * F^2}
@@ -232,6 +237,8 @@ i<-0
 for(n in nTypes){
   VAL=data[data$N == n, ]
   mod <- lm(VAL$R~VAL$F+I(VAL$F^2), data=VAL)
+  print("------------------------------------------------------------------------------------------------")
+  print(paste("N=", as.character(n)))
   print(summary(mod))
   
   Rest2F<-function(F){mod$coefficients[1]  + mod$coefficients[2] * F +   mod$coefficients[3] * F^2}
@@ -258,6 +265,8 @@ i<-0
 for(fq in frequencies){
   VAL=data[data$F == fq, ]
   mod <- lm(VAL$R~VAL$N+I(VAL$N^2), data=VAL)
+  print("------------------------------------------------------------------------------------------------")
+  print(paste("F=", as.character(fq)))
   print(summary(mod))
   
   Rest2N<-function(N){mod$coefficients[1]  + mod$coefficients[2] * N +   mod$coefficients[3] * N^2}
@@ -325,6 +334,79 @@ getParmsCth<-function(){
 
 COEFth<-list(Cth=getParmsCth(), Bth=getParmsBth(), Ath=getParmsAth())
 
+paramsThGroups<-function(){
+  
+  print("--------------------------------------------------------------------------------------------------------")
+  print("Liste des coefficients théoriques des polynôme générateurs de données")
+  l<-list()  # liste de matrice 
+  nomCoefs<-c("D0" , "D1", "D3")
+ 
+  
+  # Groupe LN
+  
+  ln<-list()  # liste intermédiaire
+  
+  pcln<-cln(frequencies)/facteurL
+  ln[[1]]<-pcln
+  pbln<-bln(frequencies)/facteurL
+  ln[[2]]<-pbln
+  paln<-aln(frequencies)/facteurL
+  ln[[3]]<-paln
+  LN <- matrix(unlist(ln), ncol = 3, byrow = FALSE)
+  dimnames(LN) <- list(frequencies, nomCoefs)
+  l[[2]]<-LN
+  
+  
+  # Groupe RN
+  
+  rn<-list()  # liste intermédiaire
+  
+  pcrn<-crn(frequencies)/facteurR
+  rn[[1]]<-pcrn
+  pbrn<-brn(frequencies)/facteurR
+  rn[[2]]<-pbrn
+  parn<-arn(frequencies)/facteurR
+  rn[[3]]<-parn
+  RN <- matrix(unlist(rn), ncol = 3, byrow = FALSE)
+  dimnames(RN) <- list(frequencies, nomCoefs)
+  l[[4]]<-RN
+  
+  
+  # Groupe LF
+  
+  lf<-list()  # liste intermédiaire
+  
+  pclf<-clf(nTypes)/facteurL
+  lf[[1]]<-pclf
+  pblf<-blf(nTypes)/facteurL
+  lf[[2]]<-pblf
+  palf<-alf(nTypes)/facteurL
+  lf[[3]]<-palf
+  LF <- matrix(unlist(lf), ncol = 3, byrow = FALSE)
+  dimnames(LF) <- list(nTypes, nomCoefs)
+  l[[1]]<-LF
+  
+  # Groupe RF
+  
+  rf<-list()  # liste intermédiaire
+  
+  pcrf<-crf(nTypes)/facteurR
+  rf[[1]]<-pcrf
+  pbrf<-brf(nTypes)/facteurR
+  rf[[2]]<-pbrf
+  parf<-arf(nTypes)/facteurR
+  rf[[3]]<-parf
+  RF <- matrix(unlist(rf), ncol = 3, byrow = FALSE)
+  dimnames(RF) <- list(nTypes, nomCoefs)
+  l[[3]]<-RF
+  
+  names(l)<-c("LF", "LN", "RF", "RN")
+  print(l)
+  return(l)
+  
+}
+
+MATcoefsTH<-paramsThGroups()
 
 
 
