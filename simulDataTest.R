@@ -326,8 +326,5 @@ getParmsCth<-function(){
 COEFth<-list(Cth=getParmsCth(), Bth=getParmsBth(), Ath=getParmsAth())
 
 
-# L31<-modL3pNLF(F,N)
-# L32<-modL3pFLF(F,N)
-# R31<-modR3pFRN(F,N)
-# L32<-modR3pNRF(F,N)
+
 

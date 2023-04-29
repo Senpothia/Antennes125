@@ -176,7 +176,7 @@ getModparams<-function(models, groupe){  # ex appel:
     
     gr<-"MODSLN"
   }
-  P
+  
   if(groupe == "RN"){
     
     gr<-"MODSRN"
