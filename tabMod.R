@@ -126,26 +126,33 @@ estimateurs<-function(models, groupe){  # ex appel:
   
   # groupes: LN, RN, LF, RF
   # models: liste de tous les models d'après le jeu de données traité
+  noms<-c()
+  noms1<-c("F=10", "F=20", "F=28.5", "F=40", "F=50", "F=66.6", "F=100")
+  noms2<-c("N=60", "N=80", "N=100", "N=120")
   
   if(groupe == "LN"){
     
     gr<-"MODSLN"
+    noms<-noms1
   }
   
   if(groupe == "RN"){
     
     gr<-"MODSRN"
+    noms<-noms1
   }
   
   if(groupe == "LF"){
     
     gr<-"MODSLF"
+    noms<-noms2
   }
   
   
   if(groupe == "RF"){
     
     gr<-"MODSRF"
+    noms<-noms2
     
   }
   
@@ -160,7 +167,7 @@ estimateurs<-function(models, groupe){  # ex appel:
     i<-i+1
     
   }
-  
+  names(EST)<-noms
   return(EST)
   
 }
@@ -269,7 +276,19 @@ getParams<-function(models){  #mod
 
 getMatParams<-function(coef){
   
+  
   MAT <- matrix(unlist(coef), ncol = 3, byrow = FALSE)
+  
+  if(dim(MAT)[1] == 4){
+    
+    dimnames(MAT) <- list(c("N=60", "N=80", "N=100", "N=120"), c("D0", "D1", "D2"))
+  }
+  
+  if(dim(MAT)[1] == 7){
+    
+    dimnames(MAT) <- list(c("F=10", "F=20", "F=28.5", "F=40", "F=50", "F=66.6", "F=100"), c("D0", "D1", "D2"))
+  }
+  
   return(MAT)
   
 }
@@ -303,6 +322,7 @@ paraModsRegs<-function(matrice, abscisse){
 # Retourne une liste de toutes les matrices de coefficients de groupes: RN, RF, LN, LF
 
 recherche<-function(){
+  
   nomCoefs<-c("D0" , "D1", "D3")
   TAB<-getMeasures("data", ",", ".")
   N<-sort(unique(TAB$N))
@@ -327,6 +347,7 @@ recherche<-function(){
   dimnames(matRN) <- list(frequencies, nomCoefs)
   
   # liste de matrices contenant les coefficients des modèles de régression
+  
   print("----  LISTE DES COEFFICIENTS REELS   ------")
   COEFS<-list(matLF, matLN, matRF, matRN)
   names(COEFS)<-c("LF", "LN", "RF", "RN")

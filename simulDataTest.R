@@ -409,4 +409,12 @@ paramsThGroups<-function(){
 MATcoefsTH<-paramsThGroups()
 
 
+cmpMods<-function(Mth, Mreal){
+  
+  #M1<-matrix(unlist(Mth), ncol = 3, byrow = FALSE)
+  return(M1-Mreal)
+  
+}
+
+
 
