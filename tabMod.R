@@ -277,7 +277,7 @@ getParams<-function(models){  #mod
 getMatParams<-function(coef){
   
   
-  MAT <- matrix(unlist(coef), ncol = 3, byrow = FALSE)
+  MAT <- matrix(unlist(coef), ncol = 3, byrow = TRUE)
   
   if(dim(MAT)[1] == 4){
     
@@ -311,13 +311,13 @@ paraModsRegs<-function(matrice, abscisse){
     v[2]<-m$coefficients[2]
     v[3]<-m$coefficients[3]
     l[[i]]<-v
-    
   }
+  MAT <- matrix(unlist(l), ncol = 3, byrow = TRUE)
+  dimnames(MAT) <- list(c("Dgr0", "Dgr1", "Dgr2"), c("D0", "D1", "D2"))
+  return(MAT)
   
-  MAT <- matrix(unlist(l), ncol = 3, byrow = FALSE)
-  
-}
 
+}
 #---------------   SCRIPT    ----------------------------------------------------------
 # Retourne une liste de toutes les matrices de coefficients de groupes: RN, RF, LN, LF
 
@@ -332,7 +332,7 @@ recherche<-function(){
   
   paramsLF<-getModparams(MODS, "LF")
   matLF<-getMatParams(paramsLF)
-  dimnames(matLF) <- list(nTypes,nomCoefs )
+  dimnames(matLF) <- list(nTypes,nomCoefs)
   
   paramsRF<-getModparams(MODS, "RF")
   matRF<-getMatParams(paramsRF)
@@ -347,10 +347,22 @@ recherche<-function(){
   dimnames(matRN) <- list(frequencies, nomCoefs)
   
   # liste de matrices contenant les coefficients des modèles de régression
+
+   # print("----  LISTE DES COEFFICIENTS REELS   ------")
+   # COEFS<-list(matLF, matLN, matRF, matRN)
+   # names(COEFS)<-c("LF", "LN", "RF", "RN")
+   # return(COEFS)
   
-  print("----  LISTE DES COEFFICIENTS REELS   ------")
-  COEFS<-list(matLF, matLN, matRF, matRN)
-  names(COEFS)<-c("LF", "LN", "RF", "RN")
+
+  print("----  REGRESSION SUR LES COEFFICIENTS REELS   ------")
+
+  MLF<-paraModsRegs(matLF, nTypes)
+  MRF<-paraModsRegs(matRF, nTypes)
+  MRN<-paraModsRegs(matRN, frequencies)
+  MLN<-paraModsRegs(matLN, frequencies)
+
+  COEFS<-list(MLF, MRF, MRN, MLN)
+  names(COEFS)<-c("LF", "RF", "RN", "LN")
   return(COEFS)
   
 }
