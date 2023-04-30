@@ -438,9 +438,13 @@ plotMODSParams2<-function(matrice, intervalle){
   figure<-ggarrange(p0,p1,p2, heights = c(2, 2, 2),
             ncol = 1, nrow = 3, align = "v")
   
-  annotate_figure(figure,
+  figure<-annotate_figure(figure,
                   top = text_grob(titre, color = "black", face = "bold", size = 14)
   )
+  
+  png(paste("./plots/", lab[1],"_coefs_params.png",sep=""))
+  print(figure)
+  dev.off()
   
 }
 
