@@ -1,5 +1,8 @@
 #Test tableau de modèles
 
+library(ggplot2)
+library(ggpubr)
+
 #Chargement des données
 #TAB<-read.table("./data/mesures.csv",header=TRUE,sep=";",dec=",")
 #TAB<-read.table("./data/data.csv",header=TRUE,sep=",",dec=".")
@@ -15,7 +18,7 @@ getMeasures<-function(file, s=";", d=","){
   
 }
 
-# Fourni la liste de toutes les listes de modèles RN, LN, RF, LF
+# Fournit la liste de toutes les listes de modèles RN, LN, RF, LF
 # liste de liste
 # RN, LN... sont des listes
 # Accès à une liste: MODS["MODSLF"] avec MODS la liste des modèles issue de getModels()
@@ -397,5 +400,36 @@ plotMODSParams<-function(matrice, intervalle){
   lines(x,y2, col="green")
   
 }
+
+
+
+plotMODSParams2<-function(matrice, intervalle){
+  
+  MATRICE <- matrix(unlist(matrice), ncol = 3, byrow = FALSE)
+  
+  m0<-MATRICE[,1]
+  m1<-MATRICE[,2]
+  m2<-MATRICE[,3]
+  
+  x<-intervalle[1]:intervalle[2]
+  y0<-function(x){m0[1] + m0[2]*x + m0[2]*x^2}
+  y1<-function(x){m1[1] + m1[2]*x + m1[2]*x^2}
+  y2<-function(x){m2[1] + m2[2]*x + m2[2]*x^2}
+  df<-data.frame(x, y0(x), y1(x), y2(x))
+  p0<-ggplot(df,aes(x))+ stat_function(fun=y0, col="red")
+  #print(p0)
+  p1<-ggplot(df,aes(x))+ stat_function(fun=y1, col="blue")
+  #print(p1)
+  p2<-ggplot(df,aes(x))+ stat_function(fun=y2, col="green")
+  #print(p2)
+ 
+  ggarrange(p0,p1,p2, heights = c(2, 2, 2),
+            ncol = 1, nrow = 3, align = "v")
+  
+}
+
+
+
+
 
 
