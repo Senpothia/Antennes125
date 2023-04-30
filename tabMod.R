@@ -320,11 +320,14 @@ paraModsRegs<-function(matrice, abscisse){
 }
 #---------------   SCRIPT    ----------------------------------------------------------
 # Retourne une liste de toutes les matrices de coefficients de groupes: RN, RF, LN, LF
+# après regression sur l'ensemble des matrices de coefficients
+# ex appel: regMods("data")
+# data: fichier de données à traiter
 
-recherche<-function(){
+regMods<-function(data){
   
   nomCoefs<-c("D0" , "D1", "D3")
-  TAB<-getMeasures("data", ",", ".")
+  TAB<-getMeasures(data, ",", ".")
   N<-sort(unique(TAB$N))
   F<-sort(unique(TAB$F))
   
