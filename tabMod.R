@@ -405,6 +405,14 @@ plotMODSParams<-function(matrice, intervalle){
 
 plotMODSParams2<-function(matrice, intervalle){
   
+  lab<-names(matrice)
+  
+  if(lab[1] == "LF"){labX<-"N tours"}
+  if(lab[1] == "RF"){labX<-"N tours"}
+  if(lab[1] == "LN"){labX<-"Fréquence"}
+  if(lab[1] == "RN"){labX<-"Fréquence"}
+  
+  
   MATRICE <- matrix(unlist(matrice), ncol = 3, byrow = FALSE)
   
   m0<-MATRICE[,1]
@@ -416,11 +424,11 @@ plotMODSParams2<-function(matrice, intervalle){
   y1<-function(x){m1[1] + m1[2]*x + m1[2]*x^2}
   y2<-function(x){m2[1] + m2[2]*x + m2[2]*x^2}
   df<-data.frame(x, y0(x), y1(x), y2(x))
-  p0<-ggplot(df,aes(x))+ stat_function(fun=y0, col="red")
+  p0<-ggplot(df,aes(x))+ stat_function(fun=y0, col="red") + ggtitle("Coefficient degré 0") + labs(x = labX, y = "d0") 
   #print(p0)
-  p1<-ggplot(df,aes(x))+ stat_function(fun=y1, col="blue")
+  p1<-ggplot(df,aes(x))+ stat_function(fun=y1, col="blue")+ ggtitle("Coefficient degré 1") + labs(x = labX, y = "d1") 
   #print(p1)
-  p2<-ggplot(df,aes(x))+ stat_function(fun=y2, col="green")
+  p2<-ggplot(df,aes(x))+ stat_function(fun=y2, col="green")+ ggtitle("Coefficient degré 2") + labs(x = labX, y = "d2") 
   #print(p2)
  
   ggarrange(p0,p1,p2, heights = c(2, 2, 2),
