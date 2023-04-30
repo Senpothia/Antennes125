@@ -407,10 +407,14 @@ plotMODSParams2<-function(matrice, intervalle){
   
   lab<-names(matrice)
   
-  if(lab[1] == "LF"){labX<-"N tours"}
-  if(lab[1] == "RF"){labX<-"N tours"}
-  if(lab[1] == "LN"){labX<-"Fréquence"}
-  if(lab[1] == "RN"){labX<-"Fréquence"}
+  if(lab[1] == "LF"){labX<-"N tours"
+                     titre<-"Inductance vs Fréquence"}
+  if(lab[1] == "RF"){labX<-"N tours"
+                     titre<-"Résistance vs Fréquence"}
+  if(lab[1] == "LN"){labX<-"Fréquence"
+                     titre<-"Inductance vs N tours"}
+  if(lab[1] == "RN"){labX<-"Fréquence"
+                     titre<-"Résistance vs N tours"}
   
   
   MATRICE <- matrix(unlist(matrice), ncol = 3, byrow = FALSE)
@@ -431,8 +435,12 @@ plotMODSParams2<-function(matrice, intervalle){
   p2<-ggplot(df,aes(x))+ stat_function(fun=y2, col="green")+ ggtitle("Coefficient degré 2") + labs(x = labX, y = "d2") 
   #print(p2)
  
-  ggarrange(p0,p1,p2, heights = c(2, 2, 2),
+  figure<-ggarrange(p0,p1,p2, heights = c(2, 2, 2),
             ncol = 1, nrow = 3, align = "v")
+  
+  annotate_figure(figure,
+                  top = text_grob(titre, color = "black", face = "bold", size = 14)
+  )
   
 }
 
