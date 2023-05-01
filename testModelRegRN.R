@@ -1,6 +1,8 @@
 
 
 # Modèle pour R vs N - N est la variable du modèle, F est le paramètre des courbes
+# Copparaison des deux modes de génération de données
+
 
 crn<-function(F){
   

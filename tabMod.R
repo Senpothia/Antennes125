@@ -1,4 +1,8 @@
-#Test tableau de modèles
+#Ensemble de fonctions destinées à traitées les données bruts issues des mesures
+#Etablit les modèles de régression, les matrices de coefficients...
+#Etablit les modèles de régressions pour les corrections à 125kHz
+# Execute les graphes des modèles sur les coefficients de régression
+
 
 library(ggplot2)
 library(ggpubr)
@@ -401,7 +405,14 @@ plotMODSParams<-function(matrice, intervalle){
   
 }
 
-
+# Trace les courbes de régression pour les coefficients du modèle: RN, LN, RF, ou LF
+# Version ggplot. Représentations conjointes de toutes les courbes.
+# matrice: liste en matrice des coefficients de regression sur les coefficients extraits des données de mesures
+# ex: 
+# CS<-regMods("data")
+# matrice= CS[1]
+# intervalel: vecteurs de l'intervalle de mesures. En rapport avec points de mesures: frequencies ou nTypes
+# ex:intervalle=c(60,120) ou intervalle=c(10, 100)
 
 plotMODSParams2<-function(matrice, intervalle){
   
