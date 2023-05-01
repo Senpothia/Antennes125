@@ -1,4 +1,5 @@
 # Etude avec l'ensemble des mesures sur 3 cartes et neutres
+# Fichier de préparation à la conception du package ant125
 
 library(ggplot2)
 library(insight)
@@ -7,42 +8,42 @@ library(rlang)
 #---------------------------------------------------------------------------------------------------------
 # Constantes
 
-env<-env(
+env<-new.env()
   
-F0<-100000,   # fréquence de référence
-dataSource<-"./data/mesures.csv",
-vdd<-5,
-Vss<-0,
-Rser=27,
-Rad=9,
-z<-1e-2, # distance de référence 1cm
-r<-0.38, # rayon de l'antenne
-Cdv1<-39e-12,
-Cdv2<-1.5e-09,
-c2<-Cdv1*Cdv2/(Cdv1+Cdv2)     # Influence pont capacitif
-#c2<-(39e-12*1.5e-9)/(39e-12+1.5e-9)  # Influence pont capacitif
+env$F0<-100000   # fréquence de référence
+env$dataSource="./data/mesures.csv"
+env$vdd=5
+env$Vss=0
+env$Rser=27
+env$Rad=9
+env$z=1e-2 # distance de référence 1cm
+env$r=0.38 # rayon de l'antenne
+env$Cdv1=39e-12
+env$Cdv2=1.5e-09
+#c2=Cdv1*Cdv2/(Cdv1+Cdv2)     # Influence pont capacitif
+env$c2<-(39e-12*1.5e-9)/(39e-12+1.5e-9)  # Influence pont capacitif
 
-)
 
-# env <- env(a = 1, b = "foo") 
+
+
 #----------------------  FONCTIONS   --------------------------------------------------------------------------------
 
 # Change reference frequency
 
 setRefFrequency<-function(freq){
   
-  F0<-freq
+  env$F0<-freq
 }
 
 setCdv1<-function(c){
   
-  Cdv1<-c
+  env$Cdv1<-c
 
 }
 
 setCdv2<-function(c){
   
-  Cdv2<-c
+  env$Cdv2<-c
   
 }
 
@@ -69,7 +70,7 @@ saveGraphPng<-function(fileName, p){
 
 Iant<-function(x){  # En milliampères
   
-  I<-(4/pi)*((vdd-Vss)/(x+Rser+2*Rad))*1000
+  I<-(4/pi)*((env$vdd-env$Vss)/(x+env$Rser+2*env$Rad))*1000
   return(I)
   
 }
@@ -77,7 +78,7 @@ Iant<-function(x){  # En milliampères
 
 IantA<-function(R){  # En Ampères
   
-  I<-(4/pi)*((vdd-Vss)/(R+Rser+2*Rad))
+  I<-(4/pi)*((env$vdd-env$Vss)/(R+env$Rser+2*env$Rad))
   return(I)
   
 }
@@ -119,7 +120,7 @@ I3n<-function(N){
 
 B0est<-function(N){
   
-  b<-I0n(N) *r^2/z^3
+  b<-I0n(N) *env$r^2/env$z^3
   return(b)
   
   
@@ -127,7 +128,7 @@ B0est<-function(N){
 
 B1est<-function(N){
   
-  b<-I1n(N)*N *r^2/z^3
+  b<-I1n(N)*N *env$r^2/env$z^3
   return(b)
   
   
@@ -135,7 +136,7 @@ B1est<-function(N){
 
 B2est<-function(N){
   
-  b<-I2n(N)*N *r^2/z^3
+  b<-I2n(N)*N *env$r^2/env$z^3
   return(b)
   
   
@@ -143,7 +144,7 @@ B2est<-function(N){
 
 B3est<-function(N){
   
-  b<-I3n(N)*N *r^2/z^3
+  b<-I3n(N)*N *env$r^2/env$z^3
   return(b)
   
   
@@ -156,46 +157,46 @@ B3est<-function(N){
 Cres<-function(N, L){
   
   L<-eval(L)
-  c<-1/((2*pi*F0)^2*L(N))^-1
+  c<-1/((2*pi*en$F0)^2*L(N))^-1
   
 }
 
 Cres1<-function(N){
   
   L<-L1Est(N)*1e-03
-  c<-((2*pi*F0)^2*L)^-1
+  c<-((2*pi*env$F0)^2*L)^-1
   
 }
 
 Cres2<-function(N){
   
   L<-L2Est(N)*1e-03
-  c<-((2*pi*F0)^2*L)^-1
+  c<-((2*pi*env$F0)^2*L)^-1
   
 }
 
 Cres3<-function(N){
   
   L<-L3Est(N)*1e-03
-  c<-((2*pi*F0)^2*L)^-1
+  c<-((2*pi*env$F0)^2*L)^-1
   
 }
 
 Cresonnance<-function(L, F=125000){  # Fréquence de résonnance à 125kHz pour L en Henry 
   
-  return(1/((2*pi*F)^2*L*1e-03) - c2)
+  return(1/((2*pi*F)^2*L*1e-03) - env$c2)
 }
 
 Vant<-function(N, R, L){
   R<-eval(R)
   L<-eval(L)
-  v<-Iant(R(N))/(2*pi*Fo*Cres) 
+  v<-Iant(R(N))/(2*pi*env$Fo*Cres) 
   
 }
 
 V1ant<-function(N){
   
-  v<-I1n(N)*1e-03/(2*pi*F0*Cres1(N)) 
+  v<-I1n(N)*1e-03/(2*pi*env$F0*Cres1(N)) 
   
   return(v)
 }
@@ -203,14 +204,14 @@ V1ant<-function(N){
 
 V2ant<-function(N){
   
-  v<-I2n(N)*1e-03/(2*pi*F0*Cres2(N)) 
+  v<-I2n(N)*1e-03/(2*pi*env$F0*Cres2(N)) 
   
   return(v)
 }
 
 V3ant<-function(N){
   
-  v<-I3n(N)*1e-03/(2*pi*F0*Cres3(N)) 
+  v<-I3n(N)*1e-03/(2*pi*env$F0*Cres3(N)) 
   
   return(v)
 }
@@ -1397,7 +1398,7 @@ repeat{
     
     # c2<-(39e-12*1.5e-9)/(39e-12+1.5e-9)  # Influence pont capacitif
     
-    Cacc<-(cap2)+c2
+    Cacc<-(cap2)+env$c2
     
     print("Capacité d'accord réelle: ")
     print(Lattendue(Cacc))
@@ -1416,7 +1417,7 @@ repeat{
     print_color("\n","red")
     print_color(paste("Optimisation pour F=125kHz et C=", cap), "red")
     print_color("pF\n","red")
-    print_color( paste("Jeu de données utilisé: ", dataSource), "red")
+    print_color( paste("Jeu de données utilisé: ", env$dataSource), "red")
     print_color("\n","red")
     print_color("\n","red")
     print_color( paste("Nombre de spires estimés: ", as.character(n[1])), "red")
