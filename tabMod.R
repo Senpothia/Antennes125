@@ -547,48 +547,125 @@ optimisEst<-function(matrice, value, param, interval){
 
 }
 
+# Exécute le calcul des valeurs de la grandeur d'interêt suivant l'estimateur
+# estimator: estimateur
+# param: valeur du paramètre. ex: F=125. Les fréquences sont indiquées en kHz
+# interval: étendue de l'interval de calcul. ex: 60:120 ou seq(60:120, by=0.1) pour le nbre de spires si le paramètre est F
+
+
+evalEstimator2<-function(matrice, param, interval){
+  
+  MATRICE <- matrix(unlist(matrice), ncol = 3, byrow = FALSE)
+  
+  x<- param
+  
+  c<-MATRICE[,1]
+  b<-MATRICE[,2]
+  a<-MATRICE[,3]
+  
+  C<-c[1] + c[2]* x + c[3]* x^2 
+  B<-b[1] + b[2]* x + b[3]* x^2 
+  A<-a[1] + a[2]* x + a[3]* x^2  
+  
+  
+  Y<-function(y) { C + B * y + A * y^2}
+ 
+  return(Y(interval))
+  
+}
+
 
 # graphe des représentations conjointes paramètrées en F ou N
 # data: jeu de données issu de getMeasures()
 # groupe: "RN", "LN", "RF", "LF"
+# estimation: données issues de l'estimateur (à 125kHz par ex.), vecteur de longueur nTypes ou frequencies
+# estimation: données issue de evalEstimator2
+# param: valeur du paramètre dans les modèles. Ex: 125kHz
 
-plotGroups<-function(data, groupe){
+
+plotGroups<-function(data, groupe, estimation, param){
+  
+  #TODO: ajouter traitement de l'extension du data.frame aux valeurs de evalEstimator2
+  
+  echs<-sort(unique(TAB$ech))
+  newEch<-max(echs) + 1
+  new_row<-c()
+ 
   
   if(groupe == "RN"){
     
+  
+    i<-1
+    
+    for(n in nTypes){
+      
+      new_row = c(echs=newEch, N=n, F=param, R=estimation[i], L=0)
+      TAB<-rbind(TAB, new_row)
+      i<-i+1
+    }
+  
+    
     p1 <- ggplot(TAB, aes(x=N, y=R, colour=F, group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE)
     # + ggtitle("Growth curve for individual chicks")
-    print(p1)
+    
    
   }
   
   if(groupe == "LN"){
     
+   
+    i<-1
+    
+    for(n in nTypes){
+      
+      new_row = c(echs=newEch, N=n, F=param, R=0, L=estimation[i])
+      TAB<-rbind(TAB, new_row)
+      i<-i+1
+    }
+  
+    
     p1 <- ggplot(TAB, aes(x=N, y=L, colour=F, group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE)
     # + ggtitle("Growth curve for individual chicks")
-    print(p1)
+ 
 
   }
   
   if(groupe == "RF"){
     
+    i<-1
+    
+    for(f in frequencies){
+      
+      new_row = c(echs=newEch, N=param, F=f, R=estimation[i], L=0)
+      TAB<-rbind(TAB, new_row)
+      i<-i+1
+    }
+    
     p1 <- ggplot(TAB, aes(x=F, y=R, colour=N, group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE)
     # + ggtitle("Growth curve for individual chicks")
-    print(p1)
+  
    
     
   }
   
   if(groupe == "LF"){
     
-  
-    p1 <- ggplot(TAB, aes(x=F, y=L, colour=N, group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE)
-    # + ggtitle("Growth curve for individual chicks")
-    print(p1)
- 
+    i<-1
     
+    for(f in frequencies){
+      
+      new_row = c(echs=newEch, N=param, F=f, R=0, L=estimation[i])
+      TAB<-rbind(TAB, new_row)
+      i<-i+1
+    }
+  
+    p1 <- ggplot(TAB, aes(x=F, y=L, colour=N, group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) 
+    #+ ggtitle("Growth curve for individual chicks")
+   
+
   }
   
+  print(p1)
  
  
 }
