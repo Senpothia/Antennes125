@@ -605,7 +605,7 @@ plotGroups<-function(data, groupe, estimation, param){
     }
   
     
-    p1 <- ggplot(TAB, aes(x=N, y=R, colour=as.factor(F), group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Résistance vs N")
+    p1 <- ggplot(TAB, aes(x=N, y=R, colour=as.factor(F), group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Résistance vs N") + labs(x = "N - Tours", y = "Résistance - Ohms", color="F")
     
    
   }
@@ -623,7 +623,7 @@ plotGroups<-function(data, groupe, estimation, param){
     }
   
     
-    p1 <- ggplot(TAB, aes(x=N, y=L, colour=as.factor(F), group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Inductance vs N")
+    p1 <- ggplot(TAB, aes(x=N, y=L, colour=as.factor(F), group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Inductance vs N") + labs(x = "N - Tours", y = "Inductance - mH", color="F")
  
 
   }
@@ -639,7 +639,7 @@ plotGroups<-function(data, groupe, estimation, param){
       i<-i+1
     }
     
-    p1 <- ggplot(TAB, aes(x=F, y=R, colour=as.factor(N), group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Résistance vs Fréquence")
+    p1 <- ggplot(TAB, aes(x=F, y=R, colour=as.factor(N), group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Résistance vs Fréquence") + labs(x = "F - kHz", y = "Résistance - Ohms", color="N")
   
    
     
@@ -656,7 +656,7 @@ plotGroups<-function(data, groupe, estimation, param){
       i<-i+1
     }
   
-    p1 <- ggplot(TAB, aes(x=F, y=L, colour=as.factor(N), group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Inductance vs Fréquence")
+    p1 <- ggplot(TAB, aes(x=F, y=L, colour=as.factor(N), group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Inductance vs Fréquence") + labs(x = "N - Tours", y = "Inductance - mH", color="N")
    
 
   }
@@ -685,8 +685,8 @@ script<-function(){
   plotGroups(TAB, "RN", YY, 125) #RN
   
   
-  YY<-evalEstimator2(CS[4],125, seq(60, 120, by=20)) #LN F=125
-  plotGroups(TAB, "LN", YY, 125) #LN
+  YY<-evalEstimator2(CS[4],90, seq(60, 120, by=20)) #LN F=125
+  plotGroups(TAB, "LN", YY, 90) #LN
    
 }
 
