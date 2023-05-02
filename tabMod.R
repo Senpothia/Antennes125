@@ -483,8 +483,6 @@ plotMODSParams2<-function(matrice, intervalle){
 
 getEstimator<-function(matrice){
   
-  
-  
   MATRICE <- matrix(unlist(matrice), ncol = 3, byrow = FALSE)
   
   c<-MATRICE[,1]
@@ -495,10 +493,27 @@ getEstimator<-function(matrice){
   B<-paste(as.character(b[1]), "+", as.character(b[2]), "* x +", as.character(b[3]), "* x^2") 
   A<-paste(as.character(a[1]), "+", as.character(a[2]), "* x +", as.character(a[3]), "* x^2") 
   
-  Y<-paste(C, "+", B, "* y", A, "* y^2") 
+  Y<-paste(C, "+", "(", B, ")","* y +","(",  A, ")" , "* y^2") 
   print(Y)
   
 }
+
+# Exécute le calcul des valeurs de la grandeur d'interêt suivant l'estimateur
+# estimator: estimateur
+# param: valeur du paramètre. ex: F=125000
+# interval: étendue de l'interval de calcul. ex: c(60,120) pour le nbre de spires si le paramètre est F
+
+evalEstimator<-function(estimator, param, interval){
+  
+  x<-param
+  y<-interval
+  fonction<-parse(text=estimator)
+  Y<-eval(fonction)
+  return (Y)
+  
+  
+}
+
 
 
 
