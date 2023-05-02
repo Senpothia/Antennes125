@@ -38,7 +38,7 @@ getModels<-function(TAB){
   
   nameList<-c("MODSLN", "MODSRN", "MODSLF", "MODSRF")
   
-  frequencies<-sort(unique(TAB$F))     # Listes des fréquences 
+  frequencies<-sort(unique(TAB$F))     # Liste des fréquences 
   echs<-sort(unique(TAB$ech))
   nTypes<-sort(unique(TAB$N))
   
@@ -538,13 +538,59 @@ optimisEst<-function(matrice, value, param, interval){
   
   C<-c[1] + c[2]* x + c[3]* x^2 
   B<-b[1] + b[2]* x + b[3]* x^2 
-  A<-a[1] + a[2]* x + a[3]* x^2 
+  A<-a[1] + a[2]* x + a[3]* x^2  
  
   
   Y<-function(y) { abs(C + B * y + A * y^2 - value) }
   minus<-optimize(Y, c(40, 120))
   return(minus)
 
+}
+
+
+# graphe des représentations conjointes paramètrées en F ou N
+# data: jeu de données issu de getMeasures()
+# groupe: "RN", "LN", "RF", "LF"
+
+plotGroups<-function(data, groupe){
+  
+  if(groupe == "RN"){
+    
+    p1 <- ggplot(TAB, aes(x=N, y=R, colour=F, group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE)
+    # + ggtitle("Growth curve for individual chicks")
+    print(p1)
+   
+  }
+  
+  if(groupe == "LN"){
+    
+    p1 <- ggplot(TAB, aes(x=N, y=L, colour=F, group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE)
+    # + ggtitle("Growth curve for individual chicks")
+    print(p1)
+
+  }
+  
+  if(groupe == "RF"){
+    
+    p1 <- ggplot(TAB, aes(x=F, y=R, colour=N, group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE)
+    # + ggtitle("Growth curve for individual chicks")
+    print(p1)
+   
+    
+  }
+  
+  if(groupe == "LF"){
+    
+  
+    p1 <- ggplot(TAB, aes(x=F, y=L, colour=N, group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE)
+    # + ggtitle("Growth curve for individual chicks")
+    print(p1)
+ 
+    
+  }
+  
+ 
+ 
 }
 
 

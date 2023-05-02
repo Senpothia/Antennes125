@@ -81,6 +81,20 @@ genLF<-function(a, b, c, r){
   
 }
 
+plot2<-function(){
+  
+  p1 <- ggplot(TAB, aes(x=N, y=R, colour=F, group=F)) + geom_point() + geom_smooth(method=lm, se=FALSE)
+  # + ggtitle("Growth curve for individual chicks")
+  print(p1)
+}
+
+plot3<-function(){
+  
+  p1 <- ggplot(TAB, aes(x=N, y=L, colour=F, group=F)) + geom_point() + geom_smooth(method=lm, se=FALSE)
+  # + ggtitle("Growth curve for individual chicks")
+  print(p1)
+}
+
 # ----------------    Exemples Fonctionnels    -------------------------------
 
 
