@@ -605,7 +605,7 @@ plotGroups<-function(data, groupe, estimation, param){
     }
   
     
-    p1 <- ggplot(TAB, aes(x=N, y=R, colour=F, group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Résistance vs N")
+    p1 <- ggplot(TAB, aes(x=N, y=R, colour=as.factor(F), group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Résistance vs N")
     
    
   }
@@ -623,7 +623,7 @@ plotGroups<-function(data, groupe, estimation, param){
     }
   
     
-    p1 <- ggplot(TAB, aes(x=N, y=L, colour=F, group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Inductance vs N")
+    p1 <- ggplot(TAB, aes(x=N, y=L, colour=as.factor(F), group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Inductance vs N")
  
 
   }
@@ -639,7 +639,7 @@ plotGroups<-function(data, groupe, estimation, param){
       i<-i+1
     }
     
-    p1 <- ggplot(TAB, aes(x=F, y=R, colour=N, group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Résistance vs Fréquence")
+    p1 <- ggplot(TAB, aes(x=F, y=R, colour=as.factor(N), group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Résistance vs Fréquence")
   
    
     
@@ -656,7 +656,7 @@ plotGroups<-function(data, groupe, estimation, param){
       i<-i+1
     }
   
-    p1 <- ggplot(TAB, aes(x=F, y=L, colour=N, group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Inductance vs Fréquence")
+    p1 <- ggplot(TAB, aes(x=F, y=L, colour=as.factor(N), group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Inductance vs Fréquence")
    
 
   }
