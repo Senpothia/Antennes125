@@ -605,8 +605,7 @@ plotGroups<-function(data, groupe, estimation, param){
     }
   
     
-    p1 <- ggplot(TAB, aes(x=N, y=R, colour=F, group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE)
-    # + ggtitle("Résistance vs N")
+    p1 <- ggplot(TAB, aes(x=N, y=R, colour=F, group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Résistance vs N")
     
    
   }
@@ -672,11 +671,22 @@ script<-function(){
   TAB<-getMeasures("data", ",", ".")
   CS<-regMods("data")
   
-  YY<-evalEstimator2(CS[4],125, seq(60, 120, by=20)) #LN F=125
-  plotGroups(TAB, "LN", YY, 125) #LF
 
-  # YY<-evalEstimator2(CS[1], 110, frequencies) #LF  N=90
-  # plotGroups(TAB, "LF", YY, 110) #LF
+
+  YY<-evalEstimator2(CS[1], 110, frequencies) #LF  N=90
+  plotGroups(TAB, "LF", YY, 110) #LF
+  
+  
+  YY<-evalEstimator2(CS[2], 110, frequencies) #RF  N=90
+  plotGroups(TAB, "RF", YY, 110) #LF
+
+  
+  YY<-evalEstimator2(CS[3],125, seq(60, 120, by=20)) #RN F=125
+  plotGroups(TAB, "RN", YY, 125) #RN
+  
+  
+  YY<-evalEstimator2(CS[4],125, seq(60, 120, by=20)) #LN F=125
+  plotGroups(TAB, "LN", YY, 125) #LN
    
 }
 
