@@ -8,8 +8,32 @@ library(rlang)
 #---------------------------------------------------------------------------------------------------------
 # Constantes
 
+# makeEnv<-function(){
+#   
+#   
+#   env<-new.env()
+#   
+#   env$F0<-100000   # fréquence de référence
+#   env$dataSource="./data/mesures.csv"
+#   env$vdd=5
+#   env$Vss=0
+#   env$Rser=27
+#   env$Rad=9
+#   env$z=1e-2 # distance de référence 1cm
+#   env$r=0.38 # rayon de l'antenne
+#   env$Cdv1=39e-12
+#   env$Cdv2=1.5e-09
+#   #c2=Cdv1*Cdv2/(Cdv1+Cdv2)     # Influence pont capacitif
+#   env$c2<-(39e-12*1.5e-9)/(39e-12+1.5e-9)  # Influence pont capacitif
+#   
+#   
+# }
+# 
+# makeEnv()
+
+
 env<-new.env()
-  
+
 env$F0<-100000   # fréquence de référence
 env$dataSource="./data/mesures.csv"
 env$vdd=5
@@ -22,8 +46,6 @@ env$Cdv1=39e-12
 env$Cdv2=1.5e-09
 #c2=Cdv1*Cdv2/(Cdv1+Cdv2)     # Influence pont capacitif
 env$c2<-(39e-12*1.5e-9)/(39e-12+1.5e-9)  # Influence pont capacitif
-
-
 
 
 #----------------------  FONCTIONS   --------------------------------------------------------------------------------
@@ -58,6 +80,7 @@ getMeasures<-function(file, s=";", d=","){
   
 }
 
+# Enregistrement d'un graphe
 
 saveGraphPng<-function(fileName, p){
   
@@ -67,6 +90,8 @@ saveGraphPng<-function(fileName, p){
   print(p)
   dev.off()
 }
+
+# Calcul du courant d'antenne
 
 Iant<-function(x){  # En milliampères
   
@@ -150,9 +175,7 @@ B3est<-function(N){
   
 }
 
-# Estimation tension d'antenne 
-
-
+# Estimation de la capacité de résonnance
 
 Cres<-function(N, L){
   
@@ -186,6 +209,8 @@ Cresonnance<-function(L, F=125000){  # Fréquence de résonnance à 125kHz pour 
   
   return(1/((2*pi*F)^2*L*1e-03) - env$c2)
 }
+
+# Estimation tension d'antenne 
 
 Vant<-function(N, R, L){
   R<-eval(R)
@@ -358,6 +383,8 @@ plotFunction<-function(func, xm, xM, main, xlab, ylab){
   )
   
 }
+
+# Acquisition des modèles d'après le jeu de données TAB
 
 getModels<-function(TAB){
   
