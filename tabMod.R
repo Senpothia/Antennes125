@@ -624,8 +624,7 @@ plotGroups<-function(data, groupe, estimation, param){
     }
   
     
-    p1 <- ggplot(TAB, aes(x=N, y=L, colour=F, group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE)
-    # + ggtitle("Growth curve for individual chicks")
+    p1 <- ggplot(TAB, aes(x=N, y=L, colour=F, group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Growth curve for individual chicks")
  
 
   }
@@ -641,8 +640,7 @@ plotGroups<-function(data, groupe, estimation, param){
       i<-i+1
     }
     
-    p1 <- ggplot(TAB, aes(x=F, y=R, colour=N, group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE)
-    # + ggtitle("Growth curve for individual chicks")
+    p1 <- ggplot(TAB, aes(x=F, y=R, colour=N, group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Growth curve for individual chicks")
   
    
     
@@ -659,8 +657,7 @@ plotGroups<-function(data, groupe, estimation, param){
       i<-i+1
     }
   
-    p1 <- ggplot(TAB, aes(x=F, y=L, colour=N, group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) 
-    #+ ggtitle("Growth curve for individual chicks")
+    p1 <- ggplot(TAB, aes(x=F, y=L, colour=N, group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Growth curve for individual chicks")
    
 
   }
@@ -670,7 +667,18 @@ plotGroups<-function(data, groupe, estimation, param){
  
 }
 
+script<-function(){
+  
+  TAB<-getMeasures("data", ",", ".")
+  CS<-regMods("data")
+  
+  YY<-evalEstimator2(CS[4],125, seq(60, 120, by=20)) #LN F=125
+  plotGroups(TAB, "LN", YY, 125) #LF
 
+  # YY<-evalEstimator2(CS[1], 110, frequencies) #LF  N=90
+  # plotGroups(TAB, "LF", YY, 110) #LF
+   
+}
 
 
 
