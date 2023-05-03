@@ -673,20 +673,12 @@ script<-function(){
   
   TAB<-getMeasures("data", ",", ".")
   
-  print(TAB)
   frequencies<-sort(unique(TAB$F))     # Liste des fréquences 
   echs<-sort(unique(TAB$ech))
   nTypes<-sort(unique(TAB$N))
   
-  print(frequencies)
-  print(echs)
-  print(nTypes)
-  
-  
   CS<-regMods("data")
   
-
-
   YY<-evalEstimator2(CS[1], 110, frequencies) #LF  N=90
   plotGroups(TAB, "LF", YY, 110) #LF
   
