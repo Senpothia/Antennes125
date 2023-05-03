@@ -669,7 +669,12 @@ plotGroups<-function(data, groupe, estimation, param){
  
 }
 
-script<-function(){
+# Fourni l'ensembles des graphes cumumlés avec insertion de la courbe simulée
+# pour comparaison
+# ex: script(c(110, 110, 125, 90))
+# script(c(N1, N2, F1, F2))
+
+getAllGraphs<-function(params){
   
   TAB<-getMeasures("data", ",", ".")
   
@@ -679,20 +684,20 @@ script<-function(){
   
   CS<-regMods("data")
   
-  YY<-evalEstimator2(CS[1], 110, frequencies) #LF  N=90
-  plotGroups(TAB, "LF", YY, 110) #LF
+  YY<-evalEstimator2(CS[1], params[1], frequencies) #LF; param: N
+  plotGroups(TAB, "LF", YY, params[1]) #LF
   
   
-  YY<-evalEstimator2(CS[2], 110, frequencies) #RF  N=90
-  plotGroups(TAB, "RF", YY, 110) #LF
+  YY<-evalEstimator2(CS[2], params[2], frequencies) #RF; param: N 
+  plotGroups(TAB, "RF", YY, params[2]) #LF
 
   
-  YY<-evalEstimator2(CS[3],125, seq(60, 120, by=20)) #RN F=125
-  plotGroups(TAB, "RN", YY, 125) #RN
+  YY<-evalEstimator2(CS[3],params[3], nTypes) #RN; param: F
+  plotGroups(TAB, "RN", YY, params[3]) #RN
   
   
-  YY<-evalEstimator2(CS[4],90, seq(60, 120, by=20)) #LN F=125
-  plotGroups(TAB, "LN", YY, 90) #LN
+  YY<-evalEstimator2(CS[4],params[4], nTypes) #LN; param: F
+  plotGroups(TAB, "LN", YY, params[4]) #LN
    
 }
 
