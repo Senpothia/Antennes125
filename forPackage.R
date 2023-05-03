@@ -20,7 +20,7 @@ Cdv2<-1.5e-09
 c2<-Cdv1*Cdv2/(Cdv1+Cdv2)     # Influence pont capacitif
 #c2<-(39e-12*1.5e-9)/(39e-12+1.5e-9)  # Influence pont capacitif
 
-env <- env(a = 1, b = "foo")
+
 #----------------------  FONCTIONS   --------------------------------------------------------------------------------
 
 # Change reference frequency
