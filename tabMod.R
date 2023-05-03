@@ -608,7 +608,7 @@ plotGroups<-function(data, groupe, estimation, param){
     }
   
     
-    p1 <- ggplot(data, aes(x=N, y=R, colour=as.factor(F), group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Résistance vs N") + labs(x = "N - Tours", y = "Résistance - Ohms", color="F")
+    p1 <- ggplot(data, aes(x=N, y=R, colour=as.factor(F), group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle(paste("Résistance vs N - Paramètre simulé: F=", as.character(param) )) + labs(x = "N - Tours", y = "Résistance - Ohms", color="F")
     
    
   }
@@ -626,7 +626,7 @@ plotGroups<-function(data, groupe, estimation, param){
     }
   
     
-    p1 <- ggplot(data, aes(x=N, y=L, colour=as.factor(F), group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Inductance vs N") + labs(x = "N - Tours", y = "Inductance - mH", color="F")
+    p1 <- ggplot(data, aes(x=N, y=L, colour=as.factor(F), group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle(paste("Inductance vs N - pamamètre simulé: F=", as.character(param))) + labs(x = "N - Tours", y = "Inductance - mH", color="F")
  
 
   }
@@ -642,7 +642,7 @@ plotGroups<-function(data, groupe, estimation, param){
       i<-i+1
     }
     
-    p1 <- ggplot(data, aes(x=F, y=R, colour=as.factor(N), group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Résistance vs Fréquence") + labs(x = "F - kHz", y = "Résistance - Ohms", color="N")
+    p1 <- ggplot(data, aes(x=F, y=R, colour=as.factor(N), group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle(paste("Résistance vs Fréquence - pamamètre simulé: N=", as.character(param))) + labs(x = "F - kHz", y = "Résistance - Ohms", color="N")
   
    
     
@@ -659,7 +659,7 @@ plotGroups<-function(data, groupe, estimation, param){
       i<-i+1
     }
   
-    p1 <- ggplot(data, aes(x=F, y=L, colour=as.factor(N), group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Inductance vs Fréquence") + labs(x = "N - Tours", y = "Inductance - mH", color="N")
+    p1 <- ggplot(data, aes(x=F, y=L, colour=as.factor(N), group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle(paste("Inductance vs Fréquence - paramètre simulé: N=", as.character(param))) + labs(x = "N - Tours", y = "Inductance - mH", color="N")
    
 
   }
