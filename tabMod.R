@@ -587,7 +587,10 @@ plotGroups<-function(data, groupe, estimation, param){
   
   #TODO: ajouter traitement de l'extension du data.frame aux valeurs de evalEstimator2
   
-  echs<-sort(unique(TAB$ech))
+  echs<-sort(unique(data$ech))
+  frequencies<-sort(unique(data$F))     # Liste des fréquences
+  nTypes<-sort(unique(data$N))
+  
   newEch<-max(echs) + 1
   new_row<-c()
  
@@ -600,12 +603,12 @@ plotGroups<-function(data, groupe, estimation, param){
     for(n in nTypes){
       
       new_row = c(echs=newEch, N=n, F=param, R=estimation[i], L=0)
-      TAB<-rbind(TAB, new_row)
+      data<-rbind(data, new_row)
       i<-i+1
     }
   
     
-    p1 <- ggplot(TAB, aes(x=N, y=R, colour=as.factor(F), group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Résistance vs N") + labs(x = "N - Tours", y = "Résistance - Ohms", color="F")
+    p1 <- ggplot(data, aes(x=N, y=R, colour=as.factor(F), group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Résistance vs N") + labs(x = "N - Tours", y = "Résistance - Ohms", color="F")
     
    
   }
@@ -618,12 +621,12 @@ plotGroups<-function(data, groupe, estimation, param){
     for(n in nTypes){
       
       new_row = c(echs=newEch, N=n, F=param, R=0, L=estimation[i])
-      TAB<-rbind(TAB, new_row)
+      data<-rbind(data, new_row)
       i<-i+1
     }
   
     
-    p1 <- ggplot(TAB, aes(x=N, y=L, colour=as.factor(F), group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Inductance vs N") + labs(x = "N - Tours", y = "Inductance - mH", color="F")
+    p1 <- ggplot(data, aes(x=N, y=L, colour=as.factor(F), group=F)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Inductance vs N") + labs(x = "N - Tours", y = "Inductance - mH", color="F")
  
 
   }
@@ -635,11 +638,11 @@ plotGroups<-function(data, groupe, estimation, param){
     for(f in frequencies){
       
       new_row = c(echs=newEch, N=param, F=f, R=estimation[i], L=0)
-      TAB<-rbind(TAB, new_row)
+      data<-rbind(data, new_row)
       i<-i+1
     }
     
-    p1 <- ggplot(TAB, aes(x=F, y=R, colour=as.factor(N), group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Résistance vs Fréquence") + labs(x = "F - kHz", y = "Résistance - Ohms", color="N")
+    p1 <- ggplot(data, aes(x=F, y=R, colour=as.factor(N), group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Résistance vs Fréquence") + labs(x = "F - kHz", y = "Résistance - Ohms", color="N")
   
    
     
@@ -652,11 +655,11 @@ plotGroups<-function(data, groupe, estimation, param){
     for(f in frequencies){
       
       new_row = c(echs=newEch, N=param, F=f, R=0, L=estimation[i])
-      TAB<-rbind(TAB, new_row)
+      data<-rbind(data, new_row)
       i<-i+1
     }
   
-    p1 <- ggplot(TAB, aes(x=F, y=L, colour=as.factor(N), group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Inductance vs Fréquence") + labs(x = "N - Tours", y = "Inductance - mH", color="N")
+    p1 <- ggplot(data, aes(x=F, y=L, colour=as.factor(N), group=N)) + geom_point() + geom_smooth(method=lm, formula = y ~ poly(x, 2), se=FALSE) + ggtitle("Inductance vs Fréquence") + labs(x = "N - Tours", y = "Inductance - mH", color="N")
    
 
   }
@@ -669,6 +672,17 @@ plotGroups<-function(data, groupe, estimation, param){
 script<-function(){
   
   TAB<-getMeasures("data", ",", ".")
+  
+  print(TAB)
+  frequencies<-sort(unique(TAB$F))     # Liste des fréquences 
+  echs<-sort(unique(TAB$ech))
+  nTypes<-sort(unique(TAB$N))
+  
+  print(frequencies)
+  print(echs)
+  print(nTypes)
+  
+  
   CS<-regMods("data")
   
 
