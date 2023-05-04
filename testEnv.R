@@ -105,6 +105,8 @@ makeEnv2<-function(){
 #     # ...
 # }
  
+ #------------------------------------------------------------------------------------------------
+ #
  # Extrait du code de test environnement de package
  # Inclusion des constantes dans le package R
  
