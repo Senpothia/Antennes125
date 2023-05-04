@@ -291,8 +291,6 @@ analyse<-function(){
       print("Capacité d'accord réelle: ")
       print(Lattendue(Cacc))
       
-     
-      
       print("Inductance attendue en mH: ")
       Latt<-Lattendue(Cacc)
       print(Latt)
@@ -316,7 +314,6 @@ analyse<-function(){
       
       
       # Estimation en fonction du courant d'antenne
-      
       
       Iantenne <- readline(prompt="Entrez la valeur du courant d'antenne en mA: ")
       
