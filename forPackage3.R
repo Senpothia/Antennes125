@@ -289,10 +289,10 @@ analyse<-function(){
       Cacc<-(cap2)+env$c2
       
       print("Capacité d'accord réelle: ")
-      print(Lattendue(Cacc))
+      print(Lattendue(Cacc, 125))
       
       print("Inductance attendue en mH: ")
-      Latt<-Lattendue(Cacc)
+      Latt<-Lattendue(Cacc, 125)
       print(Latt)
       
       n<-optimisEst(CS[4], Latt, 125, c(60,120))
@@ -342,10 +342,12 @@ analyse<-function(){
       print_color( paste("Nombre de spires estimés: ", as.character(n[1])), "red")
       print_color("\n","red")
       print_color("------------------------------------------------\n", "red")
-      Lcal<-L125k(as.numeric(n[1]))
-      print_color( paste("Inductance antenne: ", L125k(as.numeric(n[1]))), "red")
+      
+      Lcal<-evalEstimator2(CS[3], 125, as.numeric(n[1]))
+      
+      print_color(paste("Inductance antenne: ", Lcal), "red")
       print_color("\n","red")
-      print_color( paste("Capacité d'accord: ", Cresonnance(Lcal)), "red")
+      print_color(paste("Capacité d'accord: ", Cresonnance(Lcal, 125)), "red")
       print_color("\n","red")
       print_color("-----------------  FIN DE RAPPORT  ------------\n", "red")
       
