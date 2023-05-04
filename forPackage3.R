@@ -139,6 +139,13 @@ Iant<-function(x){  # En milliampères
   
 }
 
+
+RforI<-function(I){
+  rx<-function(x){abs(Iant(x) - I)}
+  r<-optimize(rx, c(0, 10000))
+  return (r)
+}
+
 # Calcul du courant d'antenne
 # R: résistance d'antenne
 
@@ -183,7 +190,6 @@ Cres<-function(N, L){
   c<-1/((2*pi*en$F0)^2*L(N))^-1
   
 }
-
 
 Cresonnance<-function(L, F){  # Fréquence de résonnance en kHz pour L en Henry 
   
@@ -247,53 +253,13 @@ plotFunction<-function(func, xm, xM, main, xlab, ylab){
   
 }
 
-# TODO
-R125k<-function(N){
-  
-  return(lm5$coefficients[1] + lm5$coefficients[2]*N)
-}
-
-NforR125<-function(N){
-  
-  return(abs(R125k(N) - Rattendue))
-  
-}
-
-spires<-function(N){  # Recherche de la valeur de N pour L donnée
-  
-  return(abs(lm4$coefficients[1] + N*lm4$coefficients[2]- Lattendue(Cacc)))
-  
-}
-
-RforI<-function(R){  # Fonction d'optimisation (R pour Iant donné)
-  
-  return(abs(IantA(R) - Iantenne2))
-  
-}
-
-# END TODO
-
-# TODO
-# Optimisations
-
-# Champs magnétiques
-
-# maxChp<-optimize(Best, c(0, 120), maximum = TRUE)
-
-
-
-#-----------------------------------------------------------------------------------------------------------------------------
-# Optimisation Freq / N
-
-
-# n<-optimize(Fmin, c(40, 120) )
-
-# END TODO
-
 #----------------------     FIN  FONCTIONS      ---------------------------------------------------------------------------
 
 #--------------------  CyCLE DE TEST -------------------------------------------------------------------------
 analyse<-function(){
+  
+  TAB<-getMeasures("data", ",", ".")
+  CS<-regMods("data")
   
   cap<-""
   Iantenne<-""
@@ -325,11 +291,13 @@ analyse<-function(){
       print("Capacité d'accord réelle: ")
       print(Lattendue(Cacc))
       
+     
       
       print("Inductance attendue en mH: ")
-      print(Lattendue(Cacc))
+      Latt<-Lattendue(Cacc)
+      print(Latt)
       
-      n<-optimize(spires, c(40, 120) )
+      n<-optimisEst(CS[4], Latt, 125, c(60,120))
       
       #--------------------------------------------------------------------------------
       
@@ -364,14 +332,15 @@ analyse<-function(){
       
       print_color(message, "red")
       
-      r<-optimize(RforI, c(0, 10000))
+      r<-RforI(Iantenne2)
+      
       message<-cat("Résistance estimée: ", as.character(r[1]), "\n")
       print_color(message, "red")
       print_color("------------------------------------------------\n", "red")
       
       Rattendue<-as.numeric(r[1])
       
-      n<-optimize(NforR, c(40, 120))
+      n<-optimisEst(CS[3], Rattendue, 125, c(60,120))
       
       print_color( paste("Nombre de spires estimés: ", as.character(n[1])), "red")
       print_color("\n","red")
@@ -389,8 +358,7 @@ analyse<-function(){
   
   print_color("FIN", "red")
   
-  
-  
+
 }
 
 

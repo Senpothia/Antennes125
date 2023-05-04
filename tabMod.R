@@ -534,7 +534,7 @@ optimisEst<-function(matrice, value, param, interval){
  
   
   Y<-function(y) { abs(C + B * y + A * y^2 - value) }
-  minus<-optimize(Y, c(40, 120))
+  minus<-optimize(Y, interval)
   return(minus)
 
 }
@@ -543,7 +543,7 @@ optimisEst<-function(matrice, value, param, interval){
 # estimator: estimateur
 # param: valeur du paramètre. ex: F=125. Les fréquences sont indiquées en kHz
 # interval: étendue de l'interval de calcul. ex: 60:120 ou seq(60:120, by=0.1) pour le nbre de spires si le paramètre est F
-
+# matrice: matrice des coefficients de régression
 
 evalEstimator2<-function(matrice, param, interval){
   
@@ -663,8 +663,8 @@ plotGroups<-function(data, groupe, estimation, param){
 
 # Fourni l'ensembles des graphes cumumlés avec insertion de la courbe simulée
 # pour comparaison
-# ex: script(c(110, 110, 125, 90))
-# script(c(N1, N2, F1, F2))
+# ex: getAllGraphs(c(110, 110, 125, 90))
+# ex: getAllGraphs(c(N1, N2, F1, F2))
 
 getAllGraphs<-function(params){
   
