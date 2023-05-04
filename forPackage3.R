@@ -129,6 +129,8 @@ saveGraphPng<-function(fileName, p){
 }
 
 # Calcul du courant d'antenne
+# x: résistance d'antenne
+
 
 Iant<-function(x){  # En milliampères
   
@@ -137,6 +139,8 @@ Iant<-function(x){  # En milliampères
   
 }
 
+# Calcul du courant d'antenne
+# R: résistance d'antenne
 
 IantA<-function(R){  # En Ampères
   
@@ -145,21 +149,27 @@ IantA<-function(R){  # En Ampères
   
 }
 
-In<-function(N){
+# Evalue la courant d'antenne d'après l'estimateur de la résistance d'antenne
+# N: nombre de spires
+# Restimator: estimateur de résistance d'antenne. Expression sous forme de string
+# obtenu à partir des coefficients de régression
+
+In<-function(N, Restimator){
   
-  I<-Iant(REst(N))
+  RN<-parse(text=Restimator)
+  R<-eval(RN)
+  I<-Iant(R)
   return(I)
   
 }
 
 # Etimation du champ magnétique
+# Evalue le champ magnétique en fonction du courant d'antenne
+# I: courant estimé d'après In
 
-
-
-
-Best<-function(N){
+Best<-function(I){
   
-  b<-In(N) *env$r^2/env$z^3
+  b<-I*env$r^2/env$z^3
   return(b)
   
   
@@ -175,10 +185,9 @@ Cres<-function(N, L){
 }
 
 
-
-Cresonnance<-function(L, F=125000){  # Fréquence de résonnance à 125kHz pour L en Henry 
+Cresonnance<-function(L, F){  # Fréquence de résonnance en kHz pour L en Henry 
   
-  return(1/((2*pi*F)^2*L*1e-03) - env$c2)
+  return(1/((2*pi*F*1000)^2*L*1e-03) - env$c2)
 }
 
 # Estimation tension d'antenne 
@@ -191,8 +200,7 @@ Vant<-function(N, R, L){
 }
 
 
-
-# Estimation fréquence d'accord
+# Estimation fréquence d'accord en foction des paramètres du circuit
 
 Fres<-function(L,C){
   
@@ -208,15 +216,18 @@ FresN<-function(N,C){
   
 }
 
-Fmin<-function(N, C){
+Fmin<-function(N, C, F){
   
-  return(abs(FresN(N, C)-125000))
+  return(abs(FresN(N, C)- (F*1000)))
   
 }
 
-Lattendue<- function(C) {
+# Evalue l'inductance en mH pour la résonance à la fréquence F donnée en kHz et
+# la capacité C donnée en pF
+
+Lattendue<- function(C, F) {
   
-  return(1e3/ (2*pi*125000)^2/C)
+  return(1e3/ (2*pi*F*1000)^2/C)
   
 } 
 
@@ -236,23 +247,48 @@ plotFunction<-function(func, xm, xM, main, xlab, ylab){
   
 }
 
+# TODO
+R125k<-function(N){
+  
+  return(lm5$coefficients[1] + lm5$coefficients[2]*N)
+}
+
+NforR125<-function(N){
+  
+  return(abs(R125k(N) - Rattendue))
+  
+}
+
+spires<-function(N){  # Recherche de la valeur de N pour L donnée
+  
+  return(abs(lm4$coefficients[1] + N*lm4$coefficients[2]- Lattendue(Cacc)))
+  
+}
+
+RforI<-function(R){  # Fonction d'optimisation (R pour Iant donné)
+  
+  return(abs(IantA(R) - Iantenne2))
+  
+}
+
+# END TODO
+
+# TODO
 # Optimisations
 
 # Champs magnétiques
-print("----------------------------------------------------")
-maxChp<-optimize(Best, c(0, 120), maximum = TRUE)
-print("Valeur maximale du champ magnétique: ")
-print(maxChp)
+
+# maxChp<-optimize(Best, c(0, 120), maximum = TRUE)
+
 
 
 #-----------------------------------------------------------------------------------------------------------------------------
 # Optimisation Freq / N
 
 
+# n<-optimize(Fmin, c(40, 120) )
 
-n<-optimize(Fmin, c(40, 120) )
-print("Optimisation Freq / N")
-print(n)
+# END TODO
 
 #----------------------     FIN  FONCTIONS      ---------------------------------------------------------------------------
 
@@ -335,7 +371,7 @@ analyse<-function(){
       
       Rattendue<-as.numeric(r[1])
       
-      n<-optimize(NforR125, c(40, 120))
+      n<-optimize(NforR, c(40, 120))
       
       print_color( paste("Nombre de spires estimés: ", as.character(n[1])), "red")
       print_color("\n","red")

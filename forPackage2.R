@@ -1469,7 +1469,6 @@ repeat{
     print("Valeur de capacité entrée: ")
     print(cap2)
     
-    # c2<-(39e-12*1.5e-9)/(39e-12+1.5e-9)  # Influence pont capacitif
     
     Cacc<-(cap2)+env$c2
     
