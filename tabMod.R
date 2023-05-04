@@ -359,14 +359,6 @@ regMods<-function(data){
   matRN<-getMatParams(paramsRN)
   dimnames(matRN) <- list(frequencies, nomCoefs)
   
-  # liste de matrices contenant les coefficients des modèles de régression
-
-   # print("----  LISTE DES COEFFICIENTS REELS   ------")
-   # COEFS<-list(matLF, matLN, matRF, matRN)
-   # names(COEFS)<-c("LF", "LN", "RF", "RN")
-   # return(COEFS)
-  
-
   print("----  REGRESSION SUR LES COEFFICIENTS REELS   ------")
 
   MLF<-paraModsRegs(matLF, nTypes)

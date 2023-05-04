@@ -189,8 +189,6 @@ I3n<-function(N){
 # Etimation du champ magnétique
 
 
-
-
 B0est<-function(N){
   
   b<-I0n(N) *env$r^2/env$z^3
